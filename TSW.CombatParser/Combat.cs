@@ -11,16 +11,13 @@ namespace TSW.CombatParser
 	{
 		public ObservableCollection<Character> Characters { get; private set; }
 
-		public Character You { get; private set; }
-		
 		public FileInfo CombatLog { get; private set; }
 
-		private uint totalAttacks = 0;
-		private uint totalEvades = 0;
-		private uint totalHeals = 0;
-		private uint totalLines = 0;
-
 		private CombatParser combatParser;
+
+		private Character you = null;
+
+		private uint totalLines = 0;
 
 		public Combat()
 		{
@@ -33,45 +30,19 @@ namespace TSW.CombatParser
 			combatParser.XP += combatParser_XP;
 		}
 
-		public uint TotalAttacks
+		public Character You
 		{
-			get { return totalAttacks; }
+			get { return you; }
 			private set
 			{
-				if (value != totalAttacks)
+				if (value != you)
 				{
-					totalAttacks = value;
-					OnPropertyChanged("TotalAttacks");
+					you = value;
+					OnPropertyChanged("You");
 				}
 			}
 		}
-
-		public uint TotalEvades
-		{
-			get { return totalEvades; }
-			private set
-			{
-				if (value != totalEvades)
-				{
-					totalEvades = value;
-					OnPropertyChanged("TotalEvades");
-				}
-			}
-		}
-
-		public uint TotalHeals
-		{
-			get { return totalHeals; }
-			private set
-			{
-				if (value != totalHeals)
-				{
-					totalHeals = value;
-					OnPropertyChanged("TotalHeals");
-				}
-			}
-		}
-
+		
 		public uint TotalLines
 		{
 			get { return totalLines; }
@@ -85,18 +56,12 @@ namespace TSW.CombatParser
 			}
 		}
 
-
 		public void Reset()
 		{
 			Characters.Clear();
 			CombatLog = null;
 
 			You = null;
-			OnPropertyChanged("You");
-
-			TotalAttacks = 0;
-			TotalEvades = 0;
-			TotalHeals = 0;
 			TotalLines = 0;
 		}
 
@@ -109,31 +74,28 @@ namespace TSW.CombatParser
 		private void combatParser_Hit(object sender, HitEventArgs e)
 		{
 			Character attacker = FindCharacter(e.Attacker);
-			attacker.AddAttack(e);
+			attacker.AddOffensiveHit(e);
 
 			Character target = FindCharacter(e.Target);
-			target.AddHit(e);
-
-			++TotalAttacks;
+			target.AddDefensiveHit(e);
 		}
 
 		private void combatParser_Evade(object sender, EvadeEventArgs e)
 		{
 			Character attacker = FindCharacter(e.Attacker);
-			attacker.AddEvade(e);
+			attacker.AddOffensiveEvade(e);
 
-			++TotalEvades;
+			Character target = FindCharacter(e.Evader);
+			target.AddDefensiveEvade(e);
 		}
 
 		private void combatParser_Heal(object sender, HealEventArgs e)
 		{
 			Character healer = FindCharacter(e.Healer);
-			healer.AddHeal(e);
+			healer.AddOffensiveHeal(e);
 
 			Character healed = FindCharacter(e.Target);
-			healed.AddHealTaken(e);
-
-			++TotalHeals;
+			healed.AddDefensiveHeal(e);
 		}
 
 		private void combatParser_XP(object sender, XpEventArgs e)
@@ -154,10 +116,7 @@ namespace TSW.CombatParser
 				{
 					character.IsYou = true;
 					if (You == null)
-					{
 						You = character;
-						OnPropertyChanged("You");
-					}
 				}
 
 				Characters.Add(character);

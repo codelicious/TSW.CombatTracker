@@ -6,17 +6,17 @@ using System.Text;
 
 namespace TSW.CombatParser
 {
-	public class AttackType: INotifyPropertyChanged
+	public class AttackTypeSummary: INotifyPropertyChanged
 	{
 		public string Name { get; private set; }
 		public string DamageType { get; set; }
-		public HitCollection Hits { get; private set; }
+		public AttackCollection Hits { get; private set; }
 
-		public AttackType(string name, string type)
+		public AttackTypeSummary(string name, string type)
 		{
 			Name = name;
 			DamageType = type;
-			Hits = new HitCollection();
+			Hits = new AttackCollection();
 		}
 
 		public uint TotalAttacks { get { return (uint)Hits.Count; } }
@@ -33,7 +33,7 @@ namespace TSW.CombatParser
 
 		public double DPH { get { return Hits.DPH; } }
 
-		public void AddAttack(Hit e)
+		public void AddAttack(Attack e)
 		{
 			TotalDamage += e.Damage;
 			Hits.Add(e);

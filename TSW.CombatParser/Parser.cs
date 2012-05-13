@@ -14,7 +14,8 @@ namespace TSW.CombatParser
 		static Regex interrupedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] Interrupted!", RegexOptions.Compiled);
 
 		static Regex otherEvadedYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded your ([\w\s]+)\.", RegexOptions.Compiled);
-		static Regex otherEvadedOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded ([\w\s]+)\'s ([\w\s]+)\.", RegexOptions.Compiled); // Also used for 'you evaded other'
+		static Regex youEvadeOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (You) evade ([\w\s]+)\'s ([\w\s]+)\.", RegexOptions.Compiled);
+		static Regex otherEvadedOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded ([\w\s]+)\'s ([\w\s]+)\.", RegexOptions.Compiled);
 
 		static Regex youHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}Your ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
 		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([\w\s]+)\'s ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
@@ -54,6 +55,13 @@ namespace TSW.CombatParser
 			if (m.Success)
 			{
 				OnOtherEvadedYou(m);
+				return;
+			}
+
+			m = youEvadeOtherEx.Match(line);
+			if (m.Success)
+			{
+				OnYouEvadedOther(m);
 				return;
 			}
 
@@ -241,6 +249,24 @@ namespace TSW.CombatParser
 				evade.Attacker = "You";
 				evade.Evader = m.Groups[2].Value;
 				evade.AttackType = m.Groups[3].Value;
+
+				Evade(null, evade);
+			}
+		}
+
+		void OnYouEvadedOther(Match m)
+		{
+			if (Evade != null)
+			{
+				EvadeEventArgs evade = new EvadeEventArgs();
+				DateTime timestamp;
+				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
+					evade.Timestamp = timestamp;
+				else
+					evade.Timestamp = DateTime.MinValue;
+				evade.Attacker = m.Groups[3].Value;
+				evade.Evader = "You";
+				evade.AttackType = m.Groups[4].Value;
 
 				Evade(null, evade);
 			}

@@ -21,18 +21,19 @@
 			</CollectionViewSource.GroupDescriptions>
 		</CollectionViewSource>
 
-		<CollectionViewSource x:Key="DamageDealersSource" Source="{Binding Characters}" CollectionViewType="{x:Type l:ListCollectionView}" Filter="DamageDealersSource_Filter">
-			<CollectionViewSource.SortDescriptions>
-				<w:SortDescription Direction="Descending" PropertyName="TotalDamage" />
-			</CollectionViewSource.SortDescriptions>
+		<!-- Sort using a custom sort because we can't reach into OffensiveHits.TotalDamage -->
+		<CollectionViewSource x:Key="DamageDealersSource"
+							  Source="{Binding Characters}"
+							  CollectionViewType="{x:Type l:ListCollectionView}"
+							  Filter="DamageDealersSource_Filter">
 		</CollectionViewSource>
 
 		<DataTemplate x:Key="DamageDealerDamageCell">
-			<TextBlock Text="{Binding TotalDamage, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=OffensiveHits.TotalDamage, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="DamageDealerDPMCell">
-			<TextBlock Text="{Binding DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=OffensiveHits.DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<GridViewColumnCollection x:Key="DamageDealersColumns">
@@ -123,32 +124,32 @@
 						</Grid.RowDefinitions>
 
 						<TextBlock Text="Total:" Grid.Row="0" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 						<TextBlock Text="Hits: " Grid.Row="1" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DamagePerHit, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DamagePerHit, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
 
 						<TextBlock Text="Crits: " Grid.Row="2" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalCrits, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=CritPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalCrits, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.CritPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
 
 						<TextBlock Text="Penetrated: " Grid.Row="3" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalPenetrated, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=PenetratedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalPenetrated, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.PenetratedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
 
 						<TextBlock Text="Glanced: " Grid.Row="4" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalGlanced, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=GlancedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalGlanced, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.GlancedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
 
 						<TextBlock Text="Blocked: " Grid.Row="5" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalBlocked, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=BlockedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalBlocked, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.BlockedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
 
 						<TextBlock Text="Missed: " Grid.Row="6" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
 
 					</Grid>
 				</GroupBox>
@@ -218,36 +219,37 @@
 						</Grid.RowDefinitions>
 
 						<TextBlock Text="Damage:" Grid.Row="0" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalDamageTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 						<TextBlock Text="Hits:" Grid.Row="1" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalAttacksTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DamagePerHitTaken, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DamagePerHit, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
 
 						<TextBlock Text="Crits:" Grid.Row="2" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalCritsTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=CritsTakenPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalCrits, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.CritPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
 
 						<TextBlock Text="Penetrated:" Grid.Row="3" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalPenetratedTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=PenetratedTakenPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalPenetrated, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.PenetratedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
 
 						<TextBlock Text="Glanced:" Grid.Row="4" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalGlancedTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=GlancedTakenPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalGlanced, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.GlancedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
 
 						<TextBlock Text="Blocked:" Grid.Row="5" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalBlockedTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=BlockedTakenPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalBlocked, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.BlockedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
 
-						<TextBlock Text="Missed:" Grid.Row="6" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalEvadedTaken, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=EvadedTakenPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
+						<TextBlock Text="Evaded:" Grid.Row="6" Grid.Column="0" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
+						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
 					</Grid>
 
 				</GroupBox>
 				
-				<GroupBox Grid.Column="1">
+				<!--<GroupBox Grid.Column="1">
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="Auto" />
@@ -281,7 +283,7 @@
 						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=TotalXP, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
 					</Grid>
 					
-				</GroupBox>
+				</GroupBox>-->
 
 			</Grid>
 		</Expander>
@@ -296,7 +298,7 @@
 
 				<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource AttackTypesColumnsHeaderStyle}" Grid.Row="0" />
 
-				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=AttackTypes}"
+				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=OffensiveAttackSummaries}"
 							  BorderThickness="0"
 							  Grid.Row="1">
 					<ItemsControl.Template>

@@ -48,12 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AsyncFileReader.cs" />
-    <Compile Include="AttackType.cs" />
+    <Compile Include="AttackTypeSummary.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Combat.cs" />
     <Compile Include="Evade.cs" />
     <Compile Include="Heal.cs" />
-    <Compile Include="Hit.cs" />
+    <Compile Include="Attack.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
