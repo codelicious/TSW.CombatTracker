@@ -1,0 +1,104 @@
+﻿<Window x:Class="TSW.CombatTracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
+		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+		Title="TSW Damage Tracker"
+		Foreground="White" Background="#01000000"
+		Width="525" Height="350" ResizeMode="CanResizeWithGrip" SizeToContent="Height"
+		Topmost="True" AllowsTransparency="True" WindowStyle="None">
+	<Window.Style>
+		<Style TargetType="Window">
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding ElementName=PinButton, Path=IsChecked}" Value="False">
+					<Setter Property="Opacity" Value="0.4" />
+				</DataTrigger>
+				<DataTrigger Binding="{Binding ElementName=MinButton, Path=IsChecked}" Value="True">
+					<Setter Property="Height" Value="Auto" />
+					<Setter Property="ResizeMode" Value="NoResize" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+
+	</Window.Style>
+
+	<Window.Resources>
+		<Style x:Key="TitleBarStyle" TargetType="DockPanel">
+			<!--<Setter Property="Background" Value="{StaticResource DarkHeaderBrush}" />-->
+		</Style>
+
+		<Style x:Key="PinButtonStyle" TargetType="ToggleButton">
+			<Style.Triggers>
+				<Trigger Property="IsChecked" Value="False">
+					<Setter Property="Opacity" Value="0.4" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="ContentPanelStyle" TargetType="Grid">
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding  ElementName=MinButton, Path=IsChecked}" Value="True">
+					<Setter Property="Visibility" Value="Collapsed" />
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+
+		<SolidColorBrush x:Key="LightHeaderBrush" Color="#E8E8E8" />
+
+		<SolidColorBrush x:Key="DarkHeaderBrush" Color="#808080" />
+
+		<SolidColorBrush x:Key="LightContentBrush" Color="Black" />
+
+	</Window.Resources>
+
+	<Window.CommandBindings>
+		<CommandBinding Command="ApplicationCommands.Close"
+                        Executed="CloseCommandHandler"/>
+	</Window.CommandBindings>
+
+	<l:ClippingBorder BorderBrush="Black" BorderThickness="1" CornerRadius="8">
+		<Grid Background="Transparent">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+			</Grid.RowDefinitions>
+
+			<!-- Title bar -->
+			<DockPanel Background="{StaticResource DarkHeaderBrush}" LastChildFill="False" Grid.Row="0">
+				<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Padding="4" DockPanel.Dock="Left" />
+				<TextBlock Text="{Binding Path=CombatLog.Name, StringFormat=- {0}}" Padding="0,4,4,4" />
+
+				<Button x:Name="CloseButton" Command="ApplicationCommands.Close" Width="16" Height="16" Margin="0,4,8,4" DockPanel.Dock="Right">
+					<Button.ToolTip>Close</Button.ToolTip>
+					<!-- TODO: Add button images -->
+				</Button>
+
+				<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right">
+					<ToggleButton.ToolTip>Minimize</ToggleButton.ToolTip>
+					<!-- TODO: Add button images -->
+				</ToggleButton>
+
+				<ToggleButton x:Name="PinButton" IsChecked="True" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
+					<ToggleButton.ToolTip>Pin</ToggleButton.ToolTip>
+					<!-- TODO: Add button images -->
+				</ToggleButton>
+
+				<Button x:Name="ClearButton" Click="ClearButton_Click" Width="16" Height="16" Margin="0,4,16,4" DockPanel.Dock="Right">
+					<Button.ToolTip>Clear statistics</Button.ToolTip>
+					<!-- TODO: Add button images -->
+				</Button>
+
+				<ToggleButton x:Name="RunButton" Checked="RunButton_Checked" Unchecked="RunButton_Unchecked" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
+					<ToggleButton.ToolTip>Process combat log</ToggleButton.ToolTip>
+					<!-- TODO: Add button images -->
+				</ToggleButton>
+
+			</DockPanel>
+
+			<Grid Name="ContentPanel" Style="{StaticResource ContentPanelStyle}" Grid.Row="1">
+				<l:CombatDisplay x:Name="CombatDisplay" DataContext="{Binding Combat}" Background="{StaticResource LightContentBrush}" />
+			</Grid>
+
+		</Grid>
+	</l:ClippingBorder>
+</Window>
