@@ -5,7 +5,7 @@
 		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 		Title="TSW Damage Tracker"
 		Foreground="White" Background="#01000000"
-		Width="525" Height="350" ResizeMode="CanResizeWithGrip" SizeToContent="Height"
+		Width="525" Height="350" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
 		Topmost="True" AllowsTransparency="True" WindowStyle="None">
 	<Window.Style>
 		<Style TargetType="Window">
@@ -75,6 +75,15 @@
 
 				<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right">
 					<ToggleButton.ToolTip>Minimize</ToggleButton.ToolTip>
+					<ToggleButton.Style>
+						<Style TargetType="{x:Type ToggleButton}">
+							<Style.Triggers>
+								<Trigger Property="IsChecked" Value="True">
+									<Setter Property="ToolTip" Value="Maximize" />
+								</Trigger>
+							</Style.Triggers>
+						</Style>
+					</ToggleButton.Style>
 					<!-- TODO: Add button images -->
 				</ToggleButton>
 

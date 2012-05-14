@@ -3,16 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
 			 xmlns:w="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+			 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 FontSize="9"
 			 Background="Black" Foreground="White"
 			 Loaded="CombatDisplay_Loaded"
              mc:Ignorable="d" d:DesignHeight="350" d:DesignWidth="500">
 	<UserControl.Resources>
-		<CollectionViewSource x:Key="CharactersSource" Source="{Binding Characters}" CollectionViewType="{x:Type l:ListCollectionView}">
+		<CollectionViewSource x:Key="CharactersSource"
+							  Source="{Binding Characters}"
+							  CollectionViewType="{x:Type l:ListCollectionView}"
+							  Filter="DamageDealersSource_Filter">
 			<CollectionViewSource.SortDescriptions>
-				<w:SortDescription Direction="Ascending" PropertyName="IsMob" />
 				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
+				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
 				<w:SortDescription Direction="Ascending" PropertyName="Name" />
 			</CollectionViewSource.SortDescriptions>
 
@@ -26,6 +31,9 @@
 							  Source="{Binding Characters}"
 							  CollectionViewType="{x:Type l:ListCollectionView}"
 							  Filter="DamageDealersSource_Filter">
+			<CollectionViewSource.SortDescriptions>
+				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
+			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
 
 		<DataTemplate x:Key="DamageDealerDamageCell">
@@ -36,16 +44,19 @@
 			<TextBlock Text="{Binding Path=OffensiveHits.DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
-		<GridViewColumnCollection x:Key="DamageDealersColumns">
-			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="100" />
-			<GridViewColumn Header="Damage" CellTemplate="{StaticResource DamageDealerDamageCell}" Width="80" />
-			<GridViewColumn Header="DPM" CellTemplate="{StaticResource DamageDealerDPMCell}" Width="50" />
-		</GridViewColumnCollection>
-
-		<Style x:Key="AttackTypesColumnsHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+		<Style x:Key="ColumnsHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Foreground" Value="White" />
 		</Style>
+
+		<GridViewColumnCollection x:Key="DamageDealersColumns">
+			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="Auto"
+							l:GridViewSort.PropertyName="Name" l:GridViewSort.ShowSortGlyph="False" />
+			<GridViewColumn Header="Damage" CellTemplate="{StaticResource DamageDealerDamageCell}" Width="Auto"
+							l:GridViewSort.PropertyName="Offensive_TotalDamage" l:GridViewSort.ShowSortGlyph="False" />
+			<GridViewColumn Header="DPM" CellTemplate="{StaticResource DamageDealerDPMCell}" Width="Auto"
+							l:GridViewSort.PropertyName="Offensive_DPM" l:GridViewSort.ShowSortGlyph="False" />
+		</GridViewColumnCollection>
 
 		<DataTemplate x:Key="AttackAttacksCell">
 			<TextBlock Text="{Binding TotalAttacks, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
@@ -68,12 +79,12 @@
 		</DataTemplate>
 
 		<GridViewColumnCollection x:Key="AttackTypesColumns">
-			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200" />
-			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="60" />
-			<GridViewColumn Header="Damage" CellTemplate="{StaticResource AttackDamageCell}" Width="75" />
-			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="55" />
-			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="55" />
-			<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="55" />
+			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
+			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
+			<GridViewColumn Header="Damage" CellTemplate="{StaticResource AttackDamageCell}" Width="65" />
+			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
+			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="45" />
+			<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />
 		</GridViewColumnCollection>
 
 		<SolidColorBrush x:Key="LightBrush" Color="Black" />
@@ -81,141 +92,138 @@
 	</UserControl.Resources>
 
 	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="*" />
-			<!--<RowDefinition Height="Auto" />-->
-		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
 
+		<GroupBox x:Name="DamageDealersGroup" Header="Damage Dealers" Grid.Column="0"
+				  BorderThickness="1"
+				  Margin="4,0,2,0"
+				  VerticalAlignment="Stretch">
 
-		<Grid Grid.Row="0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+			<!--<ListBox ItemsSource="{Binding Source={StaticResource CharactersSource}}" Grid.Row="1"
+					 Background="Black" Foreground="White">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<GridViewRowPresenter Columns="{StaticResource DamageDealersColumns}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>-->
 
-			<StackPanel Grid.Column="0">
-				<ComboBox Name="SelectedChar" Grid.Row="0"
-				  ItemsSource="{Binding Source={StaticResource CharactersSource}}"
-				  DisplayMemberPath="Name"
-				  Margin="4,8,4,0" />
+			<ListView ItemsSource="{Binding Source={StaticResource CharactersSource}}" Grid.Row="1"
+					  IsSynchronizedWithCurrentItem="True"
+					  Height="{Binding ElementName=StatsPanel, Path=DesiredHeight, diag:PresentationTraceSources.TraceLevel=High}"					  Background="Black" Foreground="White"
+					  l:GridViewSort.AutoSort="True">
+				<ListView.Template>
+					<ControlTemplate>
+						<StackPanel>
+							<GridViewHeaderRowPresenter Columns="{StaticResource DamageDealersColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" />
+							<ScrollViewer VerticalScrollBarVisibility="Auto">
+								<ItemsPresenter />
+							</ScrollViewer>
+						</StackPanel>
+					</ControlTemplate>
+				</ListView.Template>
 
-				<GroupBox x:Name="DamageDealtGroup" Header="Offensive Stats" Grid.Column="0"
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<GridViewRowPresenter Columns="{StaticResource DamageDealersColumns}" />
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+
+		</GroupBox>
+
+		<StackPanel Name="StatsPanel" Grid.Column="1">
+			<GroupBox x:Name="OffensiveStatsGroup" Header="Offensive Stats"
 					  Margin="4,0,4,2"
 					  BorderThickness="1"
 					  VerticalAlignment="Top">
-					<Grid x:Name="DamageDealtGrid">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="2*" />
-							<ColumnDefinition Width="3*" />
-						</Grid.ColumnDefinitions>
+				<Grid x:Name="DamageDealtGrid">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="50" />
+						<ColumnDefinition Width="70" />
+						<ColumnDefinition Width="60" />
+					</Grid.ColumnDefinitions>
 
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-							<RowDefinition Height="Auto" />
-						</Grid.RowDefinitions>
-
-						<TextBlock Text="Total:" Grid.Row="0" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
-
-						<TextBlock Text="Hits: " Grid.Row="1" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DamagePerHit, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
-
-						<TextBlock Text="Crits: " Grid.Row="2" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalCrits, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.CritPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
-
-						<TextBlock Text="Penetrated: " Grid.Row="3" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalPenetrated, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.PenetratedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
-
-						<TextBlock Text="Glanced: " Grid.Row="4" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalGlanced, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.GlancedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
-
-						<TextBlock Text="Blocked: " Grid.Row="5" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalBlocked, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.BlockedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
-
-						<TextBlock Text="Missed: " Grid.Row="6" Grid.Column="0" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
-						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
-
-					</Grid>
-				</GroupBox>
-
-			</StackPanel>
-
-			<GroupBox x:Name="DamageDealersGroup" Header="Damage Dealers" Grid.Column="1"
-					  Height="164
-					  " Margin="2,0,4,0"
-					  VerticalAlignment="Top">
-				<Grid>
 					<Grid.RowDefinitions>
 						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
+						<!-- Damage -->
+						<RowDefinition Height="Auto" />
+						<!-- Hits -->
+						<RowDefinition Height="Auto" />
+						<!-- Crits -->
+						<RowDefinition Height="Auto" />
+						<!-- Penetrated -->
+						<RowDefinition Height="Auto" />
+						<!-- Glanced -->
+						<RowDefinition Height="Auto" />
+						<!-- Blocked -->
+						<RowDefinition Height="Auto" />
+						<!-- Missed -->
+						<RowDefinition Height="Auto" />
+						<!-- Absorbed -->
 					</Grid.RowDefinitions>
 
-					<!--<GridViewHeaderRowPresenter Columns="{StaticResource DamageDealersColumns}" Grid.Row="0" />-->
+					<TextBlock Text="Total:" Grid.Row="0" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
-					<ItemsControl ItemsSource="{Binding Source={StaticResource DamageDealersSource}}" Grid.Row="1"
-								  BorderThickness="0"
-								  MouseDoubleClick="DamageDealers_DoubleClick">
-						<ItemsControl.Template>
-							<ControlTemplate>
-								<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
-									<ItemsPresenter />
-								</ScrollViewer>
-							</ControlTemplate>
-						</ItemsControl.Template>
+					<TextBlock Text="Hits: " Grid.Row="1" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DamagePerHit, StringFormat=({0:N1}/hit)}" Margin="8,0,0,0" Grid.Row="1" Grid.Column="2" />
 
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<GridViewRowPresenter Columns="{StaticResource DamageDealersColumns}" />
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
+					<TextBlock Text="Crits: " Grid.Row="2" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalCrits, StringFormat=N0}" TextAlignment="Right" Grid.Row="2" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.CritPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="2" Grid.Column="2" />
+
+					<TextBlock Text="Penetrated: " Grid.Row="3" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalPenetrated, StringFormat=N0}" TextAlignment="Right" Grid.Row="3" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.PenetratedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="3" Grid.Column="2" />
+
+					<TextBlock Text="Glanced: " Grid.Row="4" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalGlanced, StringFormat=N0}" TextAlignment="Right" Grid.Row="4" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.GlancedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="4" Grid.Column="2" />
+
+					<TextBlock Text="Blocked: " Grid.Row="5" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalBlocked, StringFormat=N0}" TextAlignment="Right" Grid.Row="5" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.BlockedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="5" Grid.Column="2" />
+
+					<TextBlock Text="Missed: " Grid.Row="6" Grid.Column="0" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
+
 				</Grid>
 			</GroupBox>
 
-		</Grid>
+			<Expander Header="Defensive Stats" IsExpanded="True" Foreground="White">
 
-
-		<Expander Header="Defensive Stats" IsExpanded="True" Grid.Row="2"
-				  Foreground="White">
-
-			<Grid Grid.Row="0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-
-				<GroupBox Grid.Column="0">
-					<Grid>
+				<Border BorderBrush="White" BorderThickness="2" CornerRadius="4" Margin="4,0,0,0">
+					<Grid Margin="4">
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="2*" />
-							<ColumnDefinition Width="3*" />
+							<ColumnDefinition Width="50" />
+							<ColumnDefinition Width="70" />
+							<ColumnDefinition Width="60" />
 						</Grid.ColumnDefinitions>
 
 						<Grid.RowDefinitions>
 							<RowDefinition Height="Auto" />
+							<!-- Damage -->
 							<RowDefinition Height="Auto" />
+							<!-- Hits -->
 							<RowDefinition Height="Auto" />
+							<!-- Crits -->
 							<RowDefinition Height="Auto" />
+							<!-- Penetrated -->
 							<RowDefinition Height="Auto" />
+							<!-- Glanced -->
 							<RowDefinition Height="Auto" />
+							<!-- Blocked -->
 							<RowDefinition Height="Auto" />
+							<!-- Missed -->
+							<RowDefinition Height="Auto" />
+							<!-- Absorbed -->
 						</Grid.RowDefinitions>
 
 						<TextBlock Text="Damage:" Grid.Row="0" Grid.Column="0" />
@@ -245,10 +253,11 @@
 						<TextBlock Text="Evaded:" Grid.Row="6" Grid.Column="0" />
 						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalEvaded, StringFormat=N0}" TextAlignment="Right" Grid.Row="6" Grid.Column="1" />
 						<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.EvadedPercent, StringFormat=({0:N1}%)}" Margin="8,0,0,0" Grid.Row="6" Grid.Column="2" />
+
 					</Grid>
 
-				</GroupBox>
-				
+				</Border>
+
 				<!--<GroupBox Grid.Column="1">
 					<Grid>
 						<Grid.ColumnDefinitions>
@@ -285,39 +294,73 @@
 					
 				</GroupBox>-->
 
-			</Grid>
-		</Expander>
+			</Expander>
 
-		<Expander Header="Attacks" IsExpanded="True" Grid.Row="3"
-				  Foreground="White">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="*" />
-				</Grid.RowDefinitions>
+			<Expander Header="Healing" IsExpanded="False" Foreground="White" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
 
-				<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource AttackTypesColumnsHeaderStyle}" Grid.Row="0" />
+				</Grid>
+			</Expander>
 
-				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=OffensiveAttackSummaries}"
+			<Expander Header="Attacks" IsExpanded="True" Foreground="White">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+
+					<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" Grid.Row="0" />
+
+					<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=OffensiveAttackSummaries}"
 							  BorderThickness="0"
 							  Grid.Row="1">
-					<ItemsControl.Template>
-						<ControlTemplate>
-							<ItemsPresenter />
-						</ControlTemplate>
-					</ItemsControl.Template>
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}" />
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>
+						<ItemsControl.Template>
+							<ControlTemplate>
+								<ItemsPresenter />
+							</ControlTemplate>
+						</ItemsControl.Template>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}" />
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
 
-			</Grid>
-		</Expander>
+				</Grid>
+			</Expander>
+
+			<Expander Header="Attacks" IsExpanded="False" Foreground="White" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="3">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="*" />
+					</Grid.RowDefinitions>
+
+					<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" Grid.Row="0" />
+
+					<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=DefensiveAttackSummaries}" Grid.Row="1"
+											  BorderThickness="0">
+						<ItemsControl.Template>
+							<ControlTemplate>
+								<ItemsPresenter />
+							</ControlTemplate>
+						</ItemsControl.Template>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}" />
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+				</Grid>
+			</Expander>
+
+		</StackPanel>
 
 		<!--<Grid Height="16" Grid.Row="3" />-->
-
 	</Grid>
-
 </UserControl>

@@ -32,9 +32,11 @@ namespace TSW.CombatParser
 		public HealCollection DefensiveHeals { get; private set; }
 		public ObservableCollection<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
 
-		public uint OffensiveTotalDamage { get { return OffensiveHits.TotalDamage; } }
-		public double OffensiveDPM { get { return OffensiveHits.DPS; } }
 		public uint TotalXP { get; private set; }
+
+		// These are bogus proxy properties because SortDescription is too stupid to use property paths
+		public uint Offensive_TotalDamage { get; private set; }
+		public double Offensive_DPM { get; private set; }
 
 		public bool IsYou { get; set; }
 		public bool IsMob { get; private set; }
@@ -48,6 +50,8 @@ namespace TSW.CombatParser
 			DefensiveHits = new AttackCollection();
 			DefensiveHeals = new HealCollection();
 			DefensiveAttackSummaries = new ObservableCollection<AttackTypeSummary>();
+
+			OffensiveHits.PropertyChanged += OffensiveHits_PropertyChanged;
 		}
 
 		public void AddOffensiveHit(HitEventArgs e)
@@ -104,6 +108,20 @@ namespace TSW.CombatParser
 		{
 			TotalXP += e.XP;
 			OnPropertyChanged("XP");
+		}
+
+		private void OffensiveHits_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName.Equals("TotalDamage"))
+			{
+				Offensive_TotalDamage = OffensiveHits.TotalDamage;
+				OnPropertyChanged("Offensive_TotalDamage");
+			}
+			else if (e.PropertyName.Equals("DPM"))
+			{
+				Offensive_DPM = OffensiveHits.DPM;
+				OnPropertyChanged("Offensive_DPM");
+			}
 		}
 
 		#region INotifyPropertyChanged implementation

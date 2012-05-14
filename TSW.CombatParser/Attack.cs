@@ -59,16 +59,24 @@ namespace TSW.CombatParser
 		public uint TotalAttacks { get; private set; }
 		public uint TotalDamage { get; private set; }
 		public uint TotalCrits { get; private set; }
+		public uint TotalCritDamage { get; private set; }
 		public uint TotalGlanced { get; private set; }
+		public uint TotalGlancedDamage { get; private set; }
 		public uint TotalBlocked { get; private set; }
+		public uint TotalBlockedDamage { get; private set; }
 		public uint TotalPenetrated { get; private set; }
+		public uint TotalPenetratedDamage { get; private set; }
 		public uint TotalEvaded { get; private set; }
 
 		public double DamagePerHit { get { return (double)TotalDamage / TotalAttacks; } }
 		public double CritPercent { get { return (double)TotalCrits / TotalAttacks * 100.0; } }
+		public double CritDamagePercent { get { return (double)TotalCritDamage / TotalDamage * 100.0; } }
 		public double PenetratedPercent { get { return (double)TotalPenetrated / TotalAttacks * 100.0; } }
+		public double PenetratedDamagePercent { get { return (double)TotalPenetratedDamage / TotalDamage * 100.0; } }
 		public double GlancedPercent { get { return (double)TotalGlanced / TotalAttacks * 100.0; } }
+		public double GlancedDamagePercent { get { return (double)TotalGlancedDamage / TotalDamage * 100.0; } }
 		public double BlockedPercent { get { return (double)TotalBlocked / TotalAttacks * 100.0; } }
+		public double BlockedDamagePercent { get { return (double)TotalBlockedDamage / TotalDamage * 100.0; } }
 		public double EvadedPercent { get { return (double)TotalEvaded / TotalAttacks * 100.0; } }
 
 		public double DPS { get { return GetRecentDamage(60.0) / 60.0; } }
@@ -115,22 +123,30 @@ namespace TSW.CombatParser
 			if (item.Critical)
 			{
 				++TotalCrits;
+				TotalCritDamage += item.Damage;
 				OnPropertyChanged("TotalCrits");
+				OnPropertyChanged("TotalCritDamage");
 			}
 			if (item.Glancing)
 			{
 				++TotalGlanced;
+				TotalGlancedDamage += item.Damage;
 				OnPropertyChanged("TotalGlanced");
+				OnPropertyChanged("TotalGlancedDamage");
 			}
 			if (item.Blocked)
 			{
 				++TotalBlocked;
+				TotalBlockedDamage += item.Damage;
 				OnPropertyChanged("TotalBlocked");
+				OnPropertyChanged("TotalBlockedDamage");
 			}
 			if (item.Penetrated)
 			{
 				++TotalPenetrated;
+				TotalPenetratedDamage += item.Damage;
 				OnPropertyChanged("TotalPenetrated");
+				OnPropertyChanged("TotalPenetratedDamage");
 			}
 			if (item.Evaded)
 			{

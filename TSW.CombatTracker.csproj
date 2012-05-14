@@ -68,6 +68,7 @@
     <Compile Include="Converters.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FolderDialog.cs" />
+    <Compile Include="GridSort.cs" />
     <Compile Include="ListCollectionView.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -85,6 +86,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SortDescription.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

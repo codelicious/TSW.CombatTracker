@@ -82,8 +82,8 @@ namespace TSW.CombatTracker
 					if (charactersSource != null)
 					{
 						Character ch = ((ObservableCollection<Character>)charactersSource.Source).FirstOrDefault(c => c.Name.Equals(selectedText.Text));
-						if (ch != null)
-							SelectedChar.SelectedItem = ch;
+						//if (ch != null)
+							//SelectedChar.SelectedItem = ch;
 					}
 				}
 			}

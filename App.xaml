@@ -8,12 +8,6 @@
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="Assets/BrushResources.xaml" />
 				<ResourceDictionary Source="Assets/ControlResources.xaml" />
-				<ResourceDictionary>
-					<conv:WidthConverter x:Key="WidthConverter" />
-
-					<conv:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
-				</ResourceDictionary>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>-->
 
