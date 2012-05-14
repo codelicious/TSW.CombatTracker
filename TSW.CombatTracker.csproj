@@ -66,6 +66,10 @@
       <DependentUpon>CombatDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters.cs" />
+    <Compile Include="CombatDisplay2.xaml.cs">
+      <DependentUpon>CombatDisplay2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DockPanelSplitter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FolderDialog.cs" />
     <Compile Include="GridSort.cs" />
@@ -119,6 +123,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="CombatDisplay.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="CombatDisplay2.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

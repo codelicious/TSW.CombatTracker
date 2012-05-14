@@ -5,7 +5,7 @@
 		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 		Title="TSW Damage Tracker"
 		Foreground="White" Background="#01000000"
-		Width="525" Height="350" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
+		Width="577" Height="388" ResizeMode="CanResizeWithGrip" SizeToContent="Width"
 		Topmost="True" AllowsTransparency="True" WindowStyle="None">
 	<Window.Style>
 		<Style TargetType="Window">
@@ -38,7 +38,8 @@
 		<Style x:Key="ContentPanelStyle" TargetType="Grid">
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding  ElementName=MinButton, Path=IsChecked}" Value="True">
-					<Setter Property="Visibility" Value="Collapsed" />
+					<!--<Setter Property="Visibility" Value="Collapsed" />-->
+					<Setter Property="Height" Value="0.0" />
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
@@ -105,7 +106,7 @@
 			</DockPanel>
 
 			<Grid Name="ContentPanel" Style="{StaticResource ContentPanelStyle}" Grid.Row="1">
-				<l:CombatDisplay x:Name="CombatDisplay" DataContext="{Binding Combat}" Background="{StaticResource LightContentBrush}" />
+				<l:CombatDisplay2 x:Name="CombatDisplay" DataContext="{Binding Combat}" Background="{StaticResource LightContentBrush}" />
 			</Grid>
 
 		</Grid>

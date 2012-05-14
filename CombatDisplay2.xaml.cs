@@ -13,7 +13,7 @@ namespace TSW.CombatTracker
 	/// <summary>
 	/// Interaction logic for CombatDisplay.xaml
 	/// </summary>
-	public partial class CombatDisplay2 : UserControl
+	public partial class CombatDisplay : UserControl
 	{
 		public Combat Combat { get; set; }
 
@@ -21,7 +21,7 @@ namespace TSW.CombatTracker
 		private IEditableCollectionView damageDealersView = null;
 
 
-		public CombatDisplay2()
+		public CombatDisplay()
 		{
 			InitializeComponent();
 		}
