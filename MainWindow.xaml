@@ -4,18 +4,14 @@
 		xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
 		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 		Title="TSW Damage Tracker"
-		Foreground="White" Background="#01000000"
-		Width="577" Height="388" ResizeMode="CanResizeWithGrip" SizeToContent="Width"
+		Foreground="White" Background="Transparent"
+		Width="577" Height="388" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
 		Topmost="True" AllowsTransparency="True" WindowStyle="None">
 	<Window.Style>
 		<Style TargetType="Window">
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding ElementName=PinButton, Path=IsChecked}" Value="False">
 					<Setter Property="Opacity" Value="0.4" />
-				</DataTrigger>
-				<DataTrigger Binding="{Binding ElementName=MinButton, Path=IsChecked}" Value="True">
-					<Setter Property="Height" Value="Auto" />
-					<Setter Property="ResizeMode" Value="NoResize" />
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
@@ -34,14 +30,8 @@
 				</Trigger>
 			</Style.Triggers>
 		</Style>
-
+		
 		<Style x:Key="ContentPanelStyle" TargetType="Grid">
-			<Style.Triggers>
-				<DataTrigger Binding="{Binding  ElementName=MinButton, Path=IsChecked}" Value="True">
-					<!--<Setter Property="Visibility" Value="Collapsed" />-->
-					<Setter Property="Height" Value="0.0" />
-				</DataTrigger>
-			</Style.Triggers>
 		</Style>
 
 		<SolidColorBrush x:Key="LightHeaderBrush" Color="#E8E8E8" />
@@ -74,17 +64,9 @@
 					<!-- TODO: Add button images -->
 				</Button>
 
-				<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right">
+				<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right"
+							  Checked="MinButton_Checked" Unchecked="MinButton_Unchecked">
 					<ToggleButton.ToolTip>Minimize</ToggleButton.ToolTip>
-					<ToggleButton.Style>
-						<Style TargetType="{x:Type ToggleButton}">
-							<Style.Triggers>
-								<Trigger Property="IsChecked" Value="True">
-									<Setter Property="ToolTip" Value="Maximize" />
-								</Trigger>
-							</Style.Triggers>
-						</Style>
-					</ToggleButton.Style>
 					<!-- TODO: Add button images -->
 				</ToggleButton>
 

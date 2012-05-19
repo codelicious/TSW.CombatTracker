@@ -159,9 +159,10 @@
 		<o:DockPanelSplitter DockPanel.Dock="Left" Width="2" />
 
 		<GroupBox x:Name="OffensiveStatsGroup" Header="Offensive Stats" DockPanel.Dock="Top"
-					  Margin="4,0,4,2"
-					  BorderThickness="1"
-					  VerticalAlignment="Top">
+				  IsHitTestVisible="False"
+				  Margin="4,0,4,2"
+				  BorderThickness="1"
+				  VerticalAlignment="Top">
 			<Grid x:Name="DamageDealtGrid">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="50" />
@@ -222,7 +223,7 @@
 
 		<Expander Header="Defensive Stats" IsExpanded="True" Foreground="White" DockPanel.Dock="Top">
 
-			<Border BorderBrush="White" BorderThickness="2" CornerRadius="4" Margin="4,0,0,0">
+			<Border BorderBrush="White" BorderThickness="2" CornerRadius="4" Margin="4,0,0,0" IsHitTestVisible="False">
 				<Grid Margin="4">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="50" />

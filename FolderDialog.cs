@@ -359,6 +359,41 @@ namespace TSW.CombatTracker
 	{
 	}
 
+	public class SelectFileDialog
+	{
+		FileOpenDialog fod;
+		IFileOpenDialog ifod;
+
+		public SelectFileDialog()
+		{
+			fod = new FileOpenDialog();
+			ifod = (IFileOpenDialog)fod;
+		}
+
+		public bool ShowDialog()
+		{
+			int status = ifod.Show(IntPtr.Zero);
+			if (status < 0)
+				return false;
+
+			IShellItem result;
+			ifod.GetResult(out result);
+
+			string filename;
+			result.GetDisplayName(SIGDN.FILESYSPATH, out filename);
+
+			Filename = filename;
+			return true;
+		}
+
+		public string Filename { get; protected set; }
+
+		public void SetTitle(string title)
+		{
+			ifod.SetTitle(title);
+		}
+	}
+
 	public class SelectFolderDialog
 	{
 		FileOpenDialog fod;

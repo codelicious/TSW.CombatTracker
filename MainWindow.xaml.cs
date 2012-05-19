@@ -58,8 +58,21 @@ namespace TSW.CombatTracker
 
 		private void RunButton_Checked(object sender, RoutedEventArgs e)
 		{
-			// Start processing the logs
-			Run();
+			if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+			{
+				SelectFileDialog dlg = new SelectFileDialog();
+				if (dlg.ShowDialog())
+				{
+					ProcessLog(new FileInfo(dlg.Filename));
+				}
+				else
+					RunButton.IsChecked = false;
+			}
+			else
+			{
+				// Start processing the logs
+				Run();
+			}
 		}
 
 		private void RunButton_Unchecked(object sender, RoutedEventArgs e)
@@ -70,6 +83,21 @@ namespace TSW.CombatTracker
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
 			combatParser.Reset();
+		}
+
+		double normalHeight = Double.NaN;
+
+		private void MinButton_Checked(object sender, RoutedEventArgs e)
+		{
+			normalHeight = Height;
+			ContentPanel.Visibility = Visibility.Collapsed;
+			Height = Double.NaN;
+		}
+
+		private void MinButton_Unchecked(object sender, RoutedEventArgs e)
+		{
+			ContentPanel.Visibility = Visibility.Visible;
+			Height = normalHeight;
 		}
 
 		private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
