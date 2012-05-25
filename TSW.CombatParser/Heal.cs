@@ -39,7 +39,8 @@ namespace TSW.CombatParser
 			heals.Add(item);
 
 			TotalHealth += item.Amount;
-			++TotalCrits;
+			if (item.Critical)
+				++TotalCrits;
 		}
 
 		public void Clear()

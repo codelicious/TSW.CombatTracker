@@ -54,13 +54,12 @@ namespace TSW.CombatParser
 			OffensiveHits.PropertyChanged += OffensiveHits_PropertyChanged;
 		}
 
-		public void AddOffensiveHit(HitEventArgs e)
+		public void AddOffensiveHit(Attack attack)
 		{
-			Attack hit = new Attack(e);
-			OffensiveHits.Add(hit);
+			OffensiveHits.Add(attack);
 
-			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(hit);
-			attackSummary.AddAttack(hit);
+			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(attack);
+			attackSummary.AddAttack(attack);
 
 			// One of the extra ways we can detect mobs
 			if (!IsMob && attackSummary.Name.Equals("attack"))
@@ -70,38 +69,38 @@ namespace TSW.CombatParser
 			}
 		}
 
-		public void AddOffensiveEvade(EvadeEventArgs e)
+		public void AddOffensiveEvade(Attack evade)
 		{
-			Attack evade = new Attack(e);
 			OffensiveHits.Add(evade);
 
 			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(evade);
 			attackSummary.AddAttack(evade);
 		}
 
-		public void AddOffensiveHeal(HealEventArgs e)
+		public void AddOffensiveHeal(Heal heal)
 		{
+			OffensiveHeals.Add(heal);
 		}
 
-		public void AddDefensiveHit(HitEventArgs e)
+		public void AddDefensiveHit(Attack attack)
 		{
-			Attack hit = new Attack(e);
-			DefensiveHits.Add(hit);
+			DefensiveHits.Add(attack);
 
-			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(hit);
+			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(attack);
+			attackSummary.AddAttack(attack);
 		}
 
-		public void AddDefensiveEvade(EvadeEventArgs e)
+		public void AddDefensiveEvade(Attack evade)
 		{
-			Attack evade = new Attack(e);
 			DefensiveHits.Add(evade);
 
 			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(evade);
 			attackSummary.AddAttack(evade);
 		}
 
-		public void AddDefensiveHeal(HealEventArgs e)
+		public void AddDefensiveHeal(Heal heal)
 		{
+			DefensiveHeals.Add(heal);
 		}
 
 		public void AddXp(XpEventArgs e)
@@ -135,7 +134,7 @@ namespace TSW.CombatParser
 		#endregion
 	}
 
-	internal static class AttackSummryExtensions
+	internal static class AttackSummaryExtensions
 	{
 		public static AttackTypeSummary FindAttackSummary(this ObservableCollection<AttackTypeSummary> summaries, Attack hit)
 		{
