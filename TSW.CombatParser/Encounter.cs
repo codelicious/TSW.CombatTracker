@@ -30,7 +30,7 @@ namespace TSW.CombatParser
 			Characters = new List<Character>();
 
 			Start = start;
-			End = start + TimeSpan.FromMilliseconds(1.0);
+			End = start + TimeSpan.FromSeconds(1.0);
 
 			IdleTimeToEncounterEnd = TimeSpan.FromSeconds(60.0);
 		}
@@ -38,6 +38,8 @@ namespace TSW.CombatParser
 		public void AddAttack(Attack attack)
 		{
 			Attacks.Add(attack);
+			if (attack.Timestamp > End)
+				End = attack.Timestamp;
 		}
 
 		public TimeSpan IdleTimeToEncounterEnd { get; set; }

@@ -127,10 +127,6 @@ namespace TSW.CombatParser
 				currentEncounter = new Encounter(timestamp);
 				Encounters.Add(currentEncounter);
 			}
-			else
-			{
-				currentEncounter.End = timeStamp;
-			}
 		}
 
 		public Character FindCharacter(string characterName)

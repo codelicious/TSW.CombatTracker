@@ -32,15 +32,24 @@ namespace TSW.CombatParser
 		public uint TotalHeals { get { return (uint)heals.Count; } }
 		public uint TotalHealth { get; private set; }
 		public uint TotalCrits { get; private set; }
+		public uint TotalCritHealth { get; private set; }
+
+		public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
+		public double HPM { get { return 0.0; } }
+		public double CritPercent { get { return (double)TotalCrits / TotalHeals * 100.0; } }
+		public double CritHealPercent { get { return (double)TotalCritHealth / TotalHealth * 100.0; } }
 
 		#region ICollection<Heal> implementation
-		public void Add(Heal item)
+		public void Add(Heal heal)
 		{
-			heals.Add(item);
+			heals.Add(heal);
 
-			TotalHealth += item.Amount;
-			if (item.Critical)
+			TotalHealth += heal.Amount;
+			if (heal.Critical)
+			{
 				++TotalCrits;
+				TotalCritHealth += heal.Amount;
+			}
 		}
 
 		public void Clear()
@@ -49,6 +58,7 @@ namespace TSW.CombatParser
 
 			TotalHealth = 0;
 			TotalCrits = 0;
+			TotalCritHealth = 0;
 		}
 
 		public bool Contains(Heal item)
