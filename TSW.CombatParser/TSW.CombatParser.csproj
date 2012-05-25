@@ -55,6 +55,7 @@
     <Compile Include="Evade.cs" />
     <Compile Include="Heal.cs" />
     <Compile Include="Attack.cs" />
+    <Compile Include="HealTypeSummary.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

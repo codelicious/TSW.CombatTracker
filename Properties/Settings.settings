@@ -5,5 +5,11 @@
     <Setting Name="TSWFolder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="MainWindowLeft" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="MainWindowTop" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

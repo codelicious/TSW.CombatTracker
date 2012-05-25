@@ -69,7 +69,11 @@
 		<DataTemplate x:Key="AttackDPMCell">
 			<TextBlock Text="{Binding DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
-		
+
+		<DataTemplate x:Key="AttackPercentTotalCell">
+			<TextBlock Text="{Binding PercentOfTotalDamage, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
 		<GridViewColumnCollection x:Key="AttackTypesColumns">
 			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
 			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
@@ -77,6 +81,36 @@
 			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
 			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="45" />
 			<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />
+			<GridViewColumn Header="% Total" CellTemplate="{StaticResource AttackPercentTotalCell}" Width="45" />
+		</GridViewColumnCollection>
+
+		<DataTemplate x:Key="HealHealthCell">
+			<TextBlock Text="{Binding TotalHealth, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="HealHealsCell">
+			<TextBlock Text="{Binding TotalHeals, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="HealHealthPerHealCell">
+			<TextBlock Text="{Binding HealthPerHeal, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="HealHPMCell">
+			<TextBlock Text="{Binding HealthPerMinute, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="HealPercentTotalCell">
+			<TextBlock Text="{Binding PercentOfTotalHealing, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<GridViewColumnCollection x:Key="HealTypesColumns">
+			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
+			<GridViewColumn Header="Health" CellTemplate="{StaticResource HealHealthCell}" Width="50" />
+			<GridViewColumn Header="Heals" CellTemplate="{StaticResource HealHealsCell}" Width="65" />
+			<GridViewColumn Header="Health/Heal" CellTemplate="{StaticResource HealHealthPerHealCell}" Width="52" />
+			<GridViewColumn Header="Health/Min" CellTemplate="{StaticResource HealHPMCell}" Width="52" />
+			<GridViewColumn Header="% Total" CellTemplate="{StaticResource HealPercentTotalCell}" Width="52" />
 		</GridViewColumnCollection>
 
 		<SolidColorBrush x:Key="LightBrush" Color="Black" />
@@ -352,6 +386,28 @@
 
 				</Grid>
 			</Border>
+		</Expander>
+
+		<Expander Header="Heals" IsExpanded="False" Foreground="White" DockPanel.Dock="Top">
+			<StackPanel>
+
+				<GridViewHeaderRowPresenter Columns="{StaticResource HealTypesColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" />
+
+				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHealSummaries}" Grid.Row="1"
+											  BorderThickness="0">
+					<ItemsControl.Template>
+						<ControlTemplate>
+							<ItemsPresenter />
+						</ControlTemplate>
+					</ItemsControl.Template>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<GridViewRowPresenter Columns="{StaticResource HealTypesColumns}" />
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+
+			</StackPanel>
 		</Expander>
 
 		<!--<Grid Height="16" Grid.Row="3" />-->

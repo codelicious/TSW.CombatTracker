@@ -6,18 +6,19 @@ using System.Text;
 
 namespace TSW.CombatParser
 {
-	public class AttackTypeSummary: INotifyPropertyChanged
+	public class AttackTypeSummary : INotifyPropertyChanged
 	{
-		public string Name { get; private set; }
-		public string DamageType { get; set; }
-		public AttackCollection Hits { get; private set; }
-
-		public AttackTypeSummary(string name, string type)
+		public AttackTypeSummary(AttackCollection owner, string name, string type)
 		{
+			this.owner = owner;
 			Name = name;
 			DamageType = type;
 			Hits = new AttackCollection();
 		}
+
+		public string Name { get; private set; }
+		public string DamageType { get; set; }
+		public AttackCollection Hits { get; private set; }
 
 		public uint TotalAttacks { get { return (uint)Hits.Count; } }
 
@@ -33,6 +34,10 @@ namespace TSW.CombatParser
 
 		public double DPH { get { return Hits.DPH; } }
 
+		public double PercentOfTotalDamage { get { return (double)TotalDamage / owner.TotalDamage * 100.0; } }
+
+		private AttackCollection owner;
+
 		public void AddAttack(Attack e)
 		{
 			TotalDamage += e.Damage;
@@ -40,10 +45,12 @@ namespace TSW.CombatParser
 
 			OnPropertyChanged("TotalAttacks");
 			OnPropertyChanged("TotalDamage");
+			OnPropertyChanged("TotalEvades");
 			OnPropertyChanged("DamagePerHit");
 			OnPropertyChanged("DPS");
 			OnPropertyChanged("DPM");
 			OnPropertyChanged("DPH");
+			OnPropertyChanged("PercentOfTotalDamage");
 		}
 
 		public void AddEvade(Evade e)
@@ -53,6 +60,7 @@ namespace TSW.CombatParser
 			OnPropertyChanged("TotalEvades");
 		}
 
+		#region INotifyPropertyChanged implementation
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string propertyName)
@@ -60,5 +68,6 @@ namespace TSW.CombatParser
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 		}
+		#endregion
 	}
 }

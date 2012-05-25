@@ -5,7 +5,10 @@
 		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 		Title="TSW Damage Tracker"
 		Foreground="White" Background="Transparent"
-		Width="577" Height="388" ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
+		Left="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowLeft, Mode=TwoWay}"
+		Top="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowTop, Mode=TwoWay}"
+		Width="577" Height="388"
+		ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
 		Topmost="True" AllowsTransparency="True" WindowStyle="None">
 	<Window.Style>
 		<Style TargetType="Window">

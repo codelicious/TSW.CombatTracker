@@ -103,7 +103,7 @@ namespace TSW.CombatTracker
 	}
 
 	[ComImport, Guid("42f85136-db7e-439c-85f1-e4075d135fc8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	interface IFileDialog : IModalWindow
+	interface IFileDialog
 	{
 		// Defined on IModalWindow - repeated here due to requirements of COM interop layer
 		// --------------------------------------------------------------------------------
@@ -185,7 +185,7 @@ namespace TSW.CombatTracker
 	}
 
 	[ComImport, Guid("d57c7288-d4ad-4768-be02-9d969532d960"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	interface IFileOpenDialog : IFileDialog
+	interface IFileOpenDialog
 	{
 		// Defined on IModalWindow - repeated here due to requirements of COM interop layer
 		// --------------------------------------------------------------------------------

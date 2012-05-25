@@ -35,9 +35,17 @@ namespace TSW.CombatParser
 		public uint TotalCritHealth { get; private set; }
 
 		public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
-		public double HPM { get { return 0.0; } }
+		public double HealthPerMinute { get { return GetRecentHealing(300.0); } }
 		public double CritPercent { get { return (double)TotalCrits / TotalHeals * 100.0; } }
 		public double CritHealPercent { get { return (double)TotalCritHealth / TotalHealth * 100.0; } }
+
+		private double GetRecentHealing(double seconds)
+		{
+			double recentHealing = 0.0;
+
+
+			return recentHealing;
+		}
 
 		#region ICollection<Heal> implementation
 		public void Add(Heal heal)

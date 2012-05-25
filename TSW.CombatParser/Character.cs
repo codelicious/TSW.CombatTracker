@@ -26,11 +26,13 @@ namespace TSW.CombatParser
 		public AttackCollection OffensiveHits { get; private set; }
 		public HealCollection OffensiveHeals { get; private set; }
 		public ObservableCollection<AttackTypeSummary> OffensiveAttackSummaries { get; private set; }
+		public ObservableCollection<HealTypeSummary> OffensiveHealSummaries { get; private set; }
 
 
 		public AttackCollection DefensiveHits { get; private set; }
 		public HealCollection DefensiveHeals { get; private set; }
 		public ObservableCollection<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
+		public ObservableCollection<HealTypeSummary> DefensiveHealSummaries { get; private set; }
 
 		public uint TotalXP { get; private set; }
 
@@ -46,10 +48,12 @@ namespace TSW.CombatParser
 			OffensiveHits = new AttackCollection();
 			OffensiveHeals = new HealCollection();
 			OffensiveAttackSummaries = new ObservableCollection<AttackTypeSummary>();
+			OffensiveHealSummaries = new ObservableCollection<HealTypeSummary>();
 
 			DefensiveHits = new AttackCollection();
 			DefensiveHeals = new HealCollection();
 			DefensiveAttackSummaries = new ObservableCollection<AttackTypeSummary>();
+			DefensiveHealSummaries = new ObservableCollection<HealTypeSummary>();
 
 			OffensiveHits.PropertyChanged += OffensiveHits_PropertyChanged;
 		}
@@ -58,7 +62,7 @@ namespace TSW.CombatParser
 		{
 			OffensiveHits.Add(attack);
 
-			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(attack);
+			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(attack, OffensiveHits);
 			attackSummary.AddAttack(attack);
 
 			// One of the extra ways we can detect mobs
@@ -73,20 +77,23 @@ namespace TSW.CombatParser
 		{
 			OffensiveHits.Add(evade);
 
-			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(evade);
+			AttackTypeSummary attackSummary = OffensiveAttackSummaries.FindAttackSummary(evade, OffensiveHits);
 			attackSummary.AddAttack(evade);
 		}
 
 		public void AddOffensiveHeal(Heal heal)
 		{
 			OffensiveHeals.Add(heal);
+
+			HealTypeSummary healSummary = OffensiveHealSummaries.FindHealSummary(heal, OffensiveHeals);
+			healSummary.AddHeal(heal);
 		}
 
 		public void AddDefensiveHit(Attack attack)
 		{
 			DefensiveHits.Add(attack);
 
-			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(attack);
+			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(attack, DefensiveHits);
 			attackSummary.AddAttack(attack);
 		}
 
@@ -94,13 +101,16 @@ namespace TSW.CombatParser
 		{
 			DefensiveHits.Add(evade);
 
-			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(evade);
+			AttackTypeSummary attackSummary = DefensiveAttackSummaries.FindAttackSummary(evade, DefensiveHits);
 			attackSummary.AddAttack(evade);
 		}
 
 		public void AddDefensiveHeal(Heal heal)
 		{
 			DefensiveHeals.Add(heal);
+
+			HealTypeSummary healSummary = DefensiveHealSummaries.FindHealSummary(heal, DefensiveHeals);
+			healSummary.AddHeal(heal);
 		}
 
 		public void AddXp(XpEventArgs e)
@@ -136,16 +146,28 @@ namespace TSW.CombatParser
 
 	internal static class AttackSummaryExtensions
 	{
-		public static AttackTypeSummary FindAttackSummary(this ObservableCollection<AttackTypeSummary> summaries, Attack hit)
+		public static AttackTypeSummary FindAttackSummary(this ObservableCollection<AttackTypeSummary> summaries, Attack hit, AttackCollection owner)
 		{
 			AttackTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(hit.AttackType));
 			if (summary == null)
 			{
-				summary = new AttackTypeSummary(hit.AttackType, hit.DamageType);
+				summary = new AttackTypeSummary(owner, hit.AttackType, hit.DamageType);
 				summaries.Add(summary);
 			}
 			else if (summary.DamageType == null) // This can happen if the first instance of this attack was evaded and no DamageType was available
 				summary.DamageType = hit.DamageType;
+
+			return summary;
+		}
+
+		public static HealTypeSummary FindHealSummary(this ObservableCollection<HealTypeSummary> summaries, Heal heal, HealCollection owner)
+		{
+			HealTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(heal.HealType));
+			if (summary == null)
+			{
+				summary = new HealTypeSummary(owner, heal.HealType);
+				summaries.Add(summary);
+			}
 
 			return summary;
 		}

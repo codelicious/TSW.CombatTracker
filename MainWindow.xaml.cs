@@ -24,7 +24,10 @@ namespace TSW.CombatTracker
 			MouseDown += delegate(object sender, MouseButtonEventArgs e)
 			{
 				if (e.LeftButton == MouseButtonState.Pressed)
+				{
 					DragMove();
+					Properties.Settings.Default.Save();
+				}
 			};
 
 			IsPinned = false;
