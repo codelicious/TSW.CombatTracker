@@ -51,23 +51,27 @@
 		</Style>
 
 		<DataTemplate x:Key="AttackAttacksCell">
-			<TextBlock Text="{Binding TotalAttacks, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=Hits.TotalAttacks, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDamageCell">
-			<TextBlock Text="{Binding TotalDamage, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=Hits.TotalDamage, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDmgPerHitCell">
-			<TextBlock Text="{Binding DamagePerHit, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right" />
-		</DataTemplate>
-
-		<DataTemplate x:Key="AttackDPSCell">
-			<TextBlock Text="{Binding DPS, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=Hits.DamagePerHit, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDPMCell">
-			<TextBlock Text="{Binding DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Path=Hits.DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="AttackPercentCritCell">
+			<TextBlock Text="{Binding Path=Hits.CritPercent, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="AttackPercentPenetratedCell">
+			<TextBlock Text="{Binding Path=Hits.PenetratedPercent, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackPercentTotalCell">
@@ -79,8 +83,9 @@
 			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
 			<GridViewColumn Header="Damage" CellTemplate="{StaticResource AttackDamageCell}" Width="65" />
 			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
-			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="45" />
 			<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />
+			<GridViewColumn Header="% Crit" CellTemplate="{StaticResource AttackPercentCritCell}" Width="45" />
+			<GridViewColumn Header="% Pen" CellTemplate="{StaticResource AttackPercentPenetratedCell}" Width="45" />
 			<GridViewColumn Header="% Total" CellTemplate="{StaticResource AttackPercentTotalCell}" Width="45" />
 		</GridViewColumnCollection>
 
@@ -219,6 +224,7 @@
 				<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" />
 
 				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=OffensiveAttackSummaries}"
+							  ToolTipOpening="AttackSummaries_ToolTipOpening"
 							  BorderThickness="0">
 					<ItemsControl.Template>
 						<ControlTemplate>
@@ -229,7 +235,11 @@
 					</ItemsControl.Template>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}" />
+							<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}">
+								<GridViewRowPresenter.ToolTip>
+									<TextBlock Text="{Binding Name}" />
+								</GridViewRowPresenter.ToolTip>
+							</GridViewRowPresenter>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

@@ -62,9 +62,6 @@
     </Compile>
     <Compile Include="AsyncFileReader.cs" />
     <Compile Include="ClippingBorder.cs" />
-    <Compile Include="CombatDisplay.xaml.cs">
-      <DependentUpon>CombatDisplay.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converters.cs" />
     <Compile Include="CombatDisplay2.xaml.cs">
       <DependentUpon>CombatDisplay2.xaml</DependentUpon>
@@ -119,10 +116,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\ControlResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CombatDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

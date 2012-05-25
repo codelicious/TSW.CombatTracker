@@ -13,7 +13,7 @@ namespace TSW.CombatTracker
 	/// <summary>
 	/// Interaction logic for CombatDisplay.xaml
 	/// </summary>
-	public partial class CombatDisplay : UserControl
+	public partial class CombatDisplay2 : UserControl
 	{
 		public Combat Combat { get; set; }
 
@@ -21,7 +21,7 @@ namespace TSW.CombatTracker
 		private IEditableCollectionView damageDealersView = null;
 
 
-		public CombatDisplay()
+		public CombatDisplay2()
 		{
 			InitializeComponent();
 		}
@@ -37,6 +37,10 @@ namespace TSW.CombatTracker
 				e.Accepted = !ch.IsMob;
 			else
 				e.Accepted = false;
+		}
+
+		private void AttackSummaries_ToolTipOpening(object sender, ToolTipEventArgs e)
+		{
 		}
 
 		private IEditableCollectionView CharactersView

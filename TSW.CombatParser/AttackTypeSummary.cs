@@ -19,7 +19,7 @@ namespace TSW.CombatParser
 		public string Name { get; private set; }
 		public string DamageType { get; set; }
 		public AttackCollection Hits { get; private set; }
-
+#if false
 		public uint TotalAttacks { get { return (uint)Hits.Count; } }
 
 		public double TotalDamage { get; private set; }
@@ -33,16 +33,18 @@ namespace TSW.CombatParser
 		public double DPM { get { return Hits.DPM; } }
 
 		public double DPH { get { return Hits.DPH; } }
-
-		public double PercentOfTotalDamage { get { return (double)TotalDamage / owner.TotalDamage * 100.0; } }
+#endif
+		public double PercentOfTotalDamage { get { return (double)Hits.TotalDamage / owner.TotalDamage * 100.0; } }
 
 		private AttackCollection owner;
 
 		public void AddAttack(Attack e)
 		{
+#if false
 			TotalDamage += e.Damage;
+#endif
 			Hits.Add(e);
-
+#if false
 			OnPropertyChanged("TotalAttacks");
 			OnPropertyChanged("TotalDamage");
 			OnPropertyChanged("TotalEvades");
@@ -50,14 +52,8 @@ namespace TSW.CombatParser
 			OnPropertyChanged("DPS");
 			OnPropertyChanged("DPM");
 			OnPropertyChanged("DPH");
+#endif
 			OnPropertyChanged("PercentOfTotalDamage");
-		}
-
-		public void AddEvade(Evade e)
-		{
-			++TotalEvades;
-
-			OnPropertyChanged("TotalEvades");
 		}
 
 		#region INotifyPropertyChanged implementation
