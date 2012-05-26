@@ -68,6 +68,12 @@
     </Compile>
     <Compile Include="DockPanelSplitter.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FlowDocuments\Attached.cs" />
+    <Compile Include="FlowDocuments\BindableRun.cs" />
+    <Compile Include="FlowDocuments\BlockTemplateContent.cs" />
+    <Compile Include="FlowDocuments\Fragment.cs" />
+    <Compile Include="FlowDocuments\Helpers.cs" />
+    <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FolderDialog.cs" />
     <Compile Include="GridSort.cs" />
     <Compile Include="ListCollectionView.cs" />

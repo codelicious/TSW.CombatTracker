@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
+			 xmlns:f="clr-namespace:FlowDocuments;assembly="
 			 xmlns:o="clr-namespace:OpenSourceControls;assembly="
 			 xmlns:w="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 			 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
@@ -120,28 +121,15 @@
 
 		<SolidColorBrush x:Key="LightBrush" Color="Black" />
 
-		<Style TargetType="{x:Type o:DockPanelSplitter}">
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type o:DockPanelSplitter}">
-						<Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-						</Border>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-
 	</UserControl.Resources>
 
 	<DockPanel>
-		
+
 		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top"
 					Margin="0,6,0,0">
-			<TextBlock Margin="13,4,8,4">Character: </TextBlock>
+			<TextBlock Margin="13,4,8,4">Character:</TextBlock>
 			<ComboBox ItemsSource="{Binding Source={StaticResource CharactersSource}}"					  
-					  MinWidth="150"
+					  Width="225"
 					  IsSynchronizedWithCurrentItem="True">
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
@@ -224,21 +212,36 @@
 				<GridViewHeaderRowPresenter Columns="{StaticResource AttackTypesColumns}" ColumnHeaderContainerStyle="{StaticResource ColumnsHeaderStyle}" />
 
 				<ItemsControl ItemsSource="{Binding Source={StaticResource CharactersSource}, Path=OffensiveAttackSummaries}"
-							  ToolTipOpening="AttackSummaries_ToolTipOpening"
 							  BorderThickness="0">
 					<ItemsControl.Template>
 						<ControlTemplate>
-							<ScrollViewer Padding="{TemplateBinding Padding}">
-								<ItemsPresenter />
-							</ScrollViewer>
+							<ItemsPresenter />
 						</ControlTemplate>
 					</ItemsControl.Template>
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<GridViewRowPresenter Columns="{StaticResource AttackTypesColumns}">
-								<GridViewRowPresenter.ToolTip>
-									<TextBlock Text="{Binding Name}" />
-								</GridViewRowPresenter.ToolTip>
+								<!--<GridViewRowPresenter.ToolTip>
+									<RichTextBox Width="100" Height="50" Background="Black" Foreground="White" Margin="0" Padding="0"
+												 FontFamily="Segoe UI" FontSize="10">
+										<FlowDocument>
+											<Table BorderThickness="1">
+												<TableRowGroup>
+													<TableRow>
+														<TableCell>
+															<Paragraph>Crit %:</Paragraph>
+														</TableCell>
+														<TableCell>
+															<Paragraph>
+																<f:BindableRun BoundText="{Binding Hits.CritPercent, StringFormat={}{0:N1}%}" />
+															</Paragraph>
+														</TableCell>
+													</TableRow>
+												</TableRowGroup>
+											</Table>
+										</FlowDocument>
+									</RichTextBox>
+								</GridViewRowPresenter.ToolTip>-->
 							</GridViewRowPresenter>
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
@@ -384,7 +387,7 @@
 
 					<TextBlock Text="Health:" Grid.Row="0" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.TotalHealth, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.HPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.HealthPerMinute, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 					<TextBlock Text="Heals: " Grid.Row="1" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.TotalHeals, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
