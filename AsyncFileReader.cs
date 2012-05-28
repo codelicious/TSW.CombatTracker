@@ -21,6 +21,9 @@ namespace TSW.CombatTracker
 
 		public void Read(FileStream fileStream)
 		{
+			if (asyncReader != null)
+				throw new Exception("AsyncFileReader is already running");
+
 			reader = new StreamReader(fileStream);
 
 			asyncReader = Observable.Interval(TimeSpan.FromSeconds(0.5)).ObserveOn(Scheduler.CurrentThread).Subscribe(i =>
