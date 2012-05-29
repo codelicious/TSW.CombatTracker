@@ -18,7 +18,7 @@ namespace TSW.CombatParser
 			set
 			{
 				name = value;
-				if (name.Contains(' '))
+				if (name.Contains(' ') || name.Contains('\''))
 					IsMob = true;
 			}
 		}

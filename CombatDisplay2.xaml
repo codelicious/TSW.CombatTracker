@@ -13,6 +13,19 @@
 			 Loaded="CombatDisplay_Loaded"
              mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="500">
 	<UserControl.Resources>
+		<!--<CollectionViewSource x:Key="CharactersSource"
+							  Source="{Binding Characters}">
+			<CollectionViewSource.SortDescriptions>
+				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
+				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
+				<w:SortDescription Direction="Ascending" PropertyName="Name" />
+			</CollectionViewSource.SortDescriptions>
+
+			<CollectionViewSource.GroupDescriptions>
+				<PropertyGroupDescription PropertyName="IsMob" />
+			</CollectionViewSource.GroupDescriptions>
+		</CollectionViewSource>-->
+		
 		<CollectionViewSource x:Key="CharactersSource"
 							  Source="{Binding Characters}"
 							  CollectionViewType="{x:Type l:ListCollectionView}"

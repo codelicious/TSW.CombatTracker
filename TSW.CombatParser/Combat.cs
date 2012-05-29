@@ -15,6 +15,10 @@ namespace TSW.CombatParser
 
 		public ObservableCollection<Character> Characters { get; private set; }
 
+		public ObservableCollection<Character> Players { get; private set; }
+
+		public ObservableCollection<Character> Mobs { get; private set; }
+
 		private CombatParser combatParser;
 
 		private Encounter currentEncounter = null;
@@ -27,6 +31,8 @@ namespace TSW.CombatParser
 		{
 			Encounters = new EncounterCollection();
 			Characters = new ObservableCollection<Character>();
+			Players = new ObservableCollection<Character>();
+			Mobs = new ObservableCollection<Character>();
 
 			combatParser = new CombatParser();
 			combatParser.Hit += combatParser_Hit;
@@ -145,6 +151,10 @@ namespace TSW.CombatParser
 				}
 
 				Characters.Add(character);
+				if (!character.IsMob)
+					Players.Add(character);
+				else
+					Mobs.Add(character);
 			}
 
 			return character;
