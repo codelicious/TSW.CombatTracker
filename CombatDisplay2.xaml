@@ -25,12 +25,12 @@
 				<PropertyGroupDescription PropertyName="IsMob" />
 			</CollectionViewSource.GroupDescriptions>
 		</CollectionViewSource>-->
-		
+
 		<CollectionViewSource x:Key="CharactersSource"
 							  Source="{Binding Characters}"
-							  CollectionViewType="{x:Type l:ListCollectionView}"
-							  Filter="DamageDealersSource_Filter">
+							  CollectionViewType="{x:Type l:ListCollectionView}">
 			<CollectionViewSource.SortDescriptions>
+				<w:SortDescription Direction="Ascending" PropertyName="IsMob" />
 				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
 				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
 				<w:SortDescription Direction="Ascending" PropertyName="Name" />
@@ -40,24 +40,6 @@
 				<PropertyGroupDescription PropertyName="IsMob" />
 			</CollectionViewSource.GroupDescriptions>
 		</CollectionViewSource>
-
-		<!-- Sort using a custom sort because we can't reach into OffensiveHits.TotalDamage -->
-		<CollectionViewSource x:Key="DamageDealersSource"
-							  Source="{Binding Characters}"
-							  CollectionViewType="{x:Type l:ListCollectionView}"
-							  Filter="DamageDealersSource_Filter">
-			<CollectionViewSource.SortDescriptions>
-				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
-			</CollectionViewSource.SortDescriptions>
-		</CollectionViewSource>
-
-		<DataTemplate x:Key="DamageDealerDamageCell">
-			<TextBlock Text="{Binding Path=OffensiveHits.TotalDamage, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
-		</DataTemplate>
-
-		<DataTemplate x:Key="DamageDealerDPMCell">
-			<TextBlock Text="{Binding Path=OffensiveHits.DPM, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
-		</DataTemplate>
 
 		<Style x:Key="ColumnsHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
 			<Setter Property="Background" Value="Transparent" />
@@ -140,10 +122,31 @@
 
 		<StackPanel Orientation="Horizontal" DockPanel.Dock="Top"
 					Margin="0,6,0,0">
+			<StackPanel.Resources>
+				<Style x:Key="DamageSelectorGroupHeaderStyle" TargetType="TextBlock">
+					<Setter Property="FontWeight" Value="Bold" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding Name}" Value="True">
+							<Setter Property="Text" Value="Mobs" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</StackPanel.Resources>
+
 			<TextBlock Margin="13,4,8,4">Character:</TextBlock>
 			<ComboBox ItemsSource="{Binding Source={StaticResource CharactersSource}}"					  
 					  Width="225"
 					  IsSynchronizedWithCurrentItem="True">
+				<ComboBox.GroupStyle>
+					<GroupStyle>
+						<GroupStyle.HeaderTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding Name}" Style="{StaticResource DamageSelectorGroupHeaderStyle}" />
+							</DataTemplate>
+						</GroupStyle.HeaderTemplate>
+					</GroupStyle>
+				</ComboBox.GroupStyle>
+
 				<ComboBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal">

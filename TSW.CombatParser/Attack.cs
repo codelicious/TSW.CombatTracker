@@ -79,11 +79,37 @@ namespace TSW.CombatParser
 		public double BlockedDamagePercent { get { return (double)TotalBlockedDamage / TotalDamage * 100.0; } }
 		public double EvadedPercent { get { return (double)TotalEvaded / TotalAttacks * 100.0; } }
 
-		public double DPS { get { return GetRecentDamage(60.0) / 60.0; } }
-		public double DPM { get { return GetRecentDamage(300.0) / 5.0; } }
-		public double DPH { get { return GetRecentDamage(3600.0); } }
+		public double DPS {
+			get
+			{
+				TimeSpan interval;
+				double damage = GetRecentDamage(60.0, out interval);
+				return damage / interval.TotalSeconds;
+			}
+		}
 
-		private double GetRecentDamage(double seconds)
+		public double DPM
+		{
+			get
+			{
+				TimeSpan interval;
+				double damage = GetRecentDamage(300.0, out interval);
+				return damage / (interval.TotalMinutes / 5);
+			}
+		}
+
+		public double DPH
+		{
+			get
+			{
+				TimeSpan interval;
+				double damage = GetRecentDamage(3600.0, out interval);
+				return damage / interval.TotalHours;
+			}
+		}
+
+
+		private double GetRecentDamage(double seconds, out TimeSpan actualInterval)
 		{
 			double recentDamage = 0.0;
 			DateTime latestTime = DateTime.MinValue;
@@ -104,6 +130,11 @@ namespace TSW.CombatParser
 				recentDamage += hit.Damage;
 				damageInterval = interval;
 			}
+
+			if (damageInterval.TotalSeconds >= seconds)
+				actualInterval = damageInterval;
+			else
+				actualInterval = TimeSpan.FromSeconds(seconds);
 
 			return recentDamage;
 		}

@@ -8,7 +8,7 @@ using System.Text;
 namespace TSW.CombatParser
 {
 	[System.Diagnostics.DebuggerDisplay("{Name}")]
-	public class Character : INotifyPropertyChanged
+	public class Character : INotifyPropertyChanged, IEditableObject
 	{
 		private string name = String.Empty;
 
@@ -140,6 +140,23 @@ namespace TSW.CombatParser
 		{
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+		#endregion
+
+		#region IEditableObject implementation
+		public void BeginEdit()
+		{
+			
+		}
+
+		public void CancelEdit()
+		{
+			
+		}
+
+		public void EndEdit()
+		{
+
 		}
 		#endregion
 	}
