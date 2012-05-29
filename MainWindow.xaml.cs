@@ -58,6 +58,8 @@ namespace TSW.CombatTracker
 
 		private IDisposable logWatcher = null;
 
+		private IDisposable combatDisplayUpdater = null;
+
 
 		private void RunButton_Checked(object sender, RoutedEventArgs e)
 		{
@@ -144,6 +146,14 @@ namespace TSW.CombatTracker
 
 			FileStream combatStream = File.Open(combatLog.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			logReader.Read(combatStream);
+
+			combatDisplayUpdater = Observable.Interval(TimeSpan.FromSeconds(1.0)).ObserveOnDispatcher().Subscribe(i =>
+				{
+					CombatDisplay.Refresh();
+					//object context = CombatDisplay.DataContext;
+					//CombatDisplay.DataContext = null;
+					//CombatDisplay.DataContext = context;
+				});
 		}
 
 		public void Reset()

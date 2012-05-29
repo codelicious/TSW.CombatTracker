@@ -19,51 +19,24 @@ namespace TSW.CombatParser
 		public string Name { get; private set; }
 		public string DamageType { get; set; }
 		public AttackCollection Hits { get; private set; }
-#if false
-		public uint TotalAttacks { get { return (uint)Hits.Count; } }
 
-		public double TotalDamage { get; private set; }
-
-		public uint TotalEvades { get; private set; }
-
-		public double DamagePerHit { get { return Hits.DamagePerHit; } }
-
-		public double DPS { get { return Hits.DPS; } }
-
-		public double DPM { get { return Hits.DPM; } }
-
-		public double DPH { get { return Hits.DPH; } }
-#endif
 		public double PercentOfTotalDamage { get { return (double)Hits.TotalDamage / owner.TotalDamage * 100.0; } }
 
 		private AttackCollection owner;
 
 		public void AddAttack(Attack e)
 		{
-#if false
-			TotalDamage += e.Damage;
-#endif
 			Hits.Add(e);
-#if false
-			OnPropertyChanged("TotalAttacks");
-			OnPropertyChanged("TotalDamage");
-			OnPropertyChanged("TotalEvades");
-			OnPropertyChanged("DamagePerHit");
-			OnPropertyChanged("DPS");
-			OnPropertyChanged("DPM");
-			OnPropertyChanged("DPH");
-#endif
-			OnPropertyChanged("PercentOfTotalDamage");
 		}
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
+		public void Refresh()
 		{
+			Hits.Refresh();
+
 			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
 		}
-		#endregion
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

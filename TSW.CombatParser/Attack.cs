@@ -148,52 +148,30 @@ namespace TSW.CombatParser
 			++TotalAttacks;
 			TotalDamage += item.Damage;
 
-			OnPropertyChanged("TotalAttacks");
-			OnPropertyChanged("TotalDamage");
-
 			if (item.Critical)
 			{
 				++TotalCrits;
 				TotalCritDamage += item.Damage;
-				OnPropertyChanged("TotalCrits");
-				OnPropertyChanged("TotalCritDamage");
 			}
 			if (item.Glancing)
 			{
 				++TotalGlanced;
 				TotalGlancedDamage += item.Damage;
-				OnPropertyChanged("TotalGlanced");
-				OnPropertyChanged("TotalGlancedDamage");
 			}
 			if (item.Blocked)
 			{
 				++TotalBlocked;
 				TotalBlockedDamage += item.Damage;
-				OnPropertyChanged("TotalBlocked");
-				OnPropertyChanged("TotalBlockedDamage");
 			}
 			if (item.Penetrated)
 			{
 				++TotalPenetrated;
 				TotalPenetratedDamage += item.Damage;
-				OnPropertyChanged("TotalPenetrated");
-				OnPropertyChanged("TotalPenetratedDamage");
 			}
 			if (item.Evaded)
 			{
 				++TotalEvaded;
-				OnPropertyChanged("TotalEvaded");
 			}
-
-			OnPropertyChanged("DamagePerHit");
-			OnPropertyChanged("CritPercent");
-			OnPropertyChanged("GlancedPercent");
-			OnPropertyChanged("BlockedPercent");
-			OnPropertyChanged("PenetratedPercent");
-			OnPropertyChanged("EvadedPercent");
-			OnPropertyChanged("DPS");
-			OnPropertyChanged("DPM");
-			OnPropertyChanged("DPH");
 		}
 
 		public void Clear()
@@ -207,24 +185,6 @@ namespace TSW.CombatParser
 			TotalBlocked = 0;
 			TotalPenetrated = 0;
 			TotalGlanced = 0;
-
-			OnPropertyChanged("TotalAttacks");
-			OnPropertyChanged("TotalDamage");
-			OnPropertyChanged("TotalCrits");
-			OnPropertyChanged("TotalGlanced");
-			OnPropertyChanged("TotalBlocked");
-			OnPropertyChanged("TotalPenetrated");
-			OnPropertyChanged("TotalEvaded");
-
-			OnPropertyChanged("DamagePerHit");
-			OnPropertyChanged("CritPercent");
-			OnPropertyChanged("GlancedPercent");
-			OnPropertyChanged("BlockedPercent");
-			OnPropertyChanged("PenetratedPercent");
-			OnPropertyChanged("EvadedPercent");
-			OnPropertyChanged("DPS");
-			OnPropertyChanged("DPM");
-			OnPropertyChanged("DPH");
 		}
 
 		public bool Contains(Attack item)
@@ -259,18 +219,16 @@ namespace TSW.CombatParser
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return attacks.GetEnumerator();
+			return ((System.Collections.IEnumerable)attacks).GetEnumerator();
 		}
 		#endregion
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
+		public void Refresh()
 		{
 			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
 		}
-		#endregion
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

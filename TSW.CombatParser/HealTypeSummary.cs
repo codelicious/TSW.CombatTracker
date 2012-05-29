@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TSW.CombatParser
 {
-	public class HealTypeSummary : INotifyPropertyChanged
+	public class HealTypeSummary
 	{
 		public HealTypeSummary(HealCollection owner, string name)
 		{
@@ -36,22 +36,6 @@ namespace TSW.CombatParser
 
 			TotalHealth += heal.Amount;
 			++TotalHeals;
-
-			OnPropertyChanged("TotalHealth");
-			OnPropertyChanged("TotalHeals");
-			OnPropertyChanged("HealthPerHeal");
-			OnPropertyChanged("HealthPerMinute");
-			OnPropertyChanged("PercentOfTotalHealing");
 		}
-
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-		#endregion
 	}
 }

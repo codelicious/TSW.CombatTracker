@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace TSW.CombatParser
 		}
 	}
 
-	public class HealCollection : ICollection<Heal>
+	public class HealCollection : ICollection<Heal>, INotifyPropertyChanged
 	{
 		private List<Heal> heals = new List<Heal>();
 
@@ -104,5 +105,13 @@ namespace TSW.CombatParser
 			return heals.GetEnumerator();
 		}
 		#endregion
+
+		public void Refresh()
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
+		}
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

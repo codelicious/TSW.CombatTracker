@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 
 namespace TSW.CombatParser
 {
 	[System.Diagnostics.DebuggerDisplay("{Name}")]
-	public class Character : INotifyPropertyChanged, IEditableObject
+	public class Character : INotifyPropertyChanged
 	{
 		private string name = String.Empty;
 
@@ -25,14 +23,14 @@ namespace TSW.CombatParser
 
 		public AttackCollection OffensiveHits { get; private set; }
 		public HealCollection OffensiveHeals { get; private set; }
-		public ObservableCollection<AttackTypeSummary> OffensiveAttackSummaries { get; private set; }
-		public ObservableCollection<HealTypeSummary> OffensiveHealSummaries { get; private set; }
+		public List<AttackTypeSummary> OffensiveAttackSummaries { get; private set; }
+		public List<HealTypeSummary> OffensiveHealSummaries { get; private set; }
 
 
 		public AttackCollection DefensiveHits { get; private set; }
 		public HealCollection DefensiveHeals { get; private set; }
-		public ObservableCollection<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
-		public ObservableCollection<HealTypeSummary> DefensiveHealSummaries { get; private set; }
+		public List<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
+		public List<HealTypeSummary> DefensiveHealSummaries { get; private set; }
 
 		public uint TotalXP { get; private set; }
 
@@ -47,15 +45,13 @@ namespace TSW.CombatParser
 		{
 			OffensiveHits = new AttackCollection();
 			OffensiveHeals = new HealCollection();
-			OffensiveAttackSummaries = new ObservableCollection<AttackTypeSummary>();
-			OffensiveHealSummaries = new ObservableCollection<HealTypeSummary>();
+			OffensiveAttackSummaries = new List<AttackTypeSummary>();
+			OffensiveHealSummaries = new List<HealTypeSummary>();
 
 			DefensiveHits = new AttackCollection();
 			DefensiveHeals = new HealCollection();
-			DefensiveAttackSummaries = new ObservableCollection<AttackTypeSummary>();
-			DefensiveHealSummaries = new ObservableCollection<HealTypeSummary>();
-
-			OffensiveHits.PropertyChanged += OffensiveHits_PropertyChanged;
+			DefensiveAttackSummaries = new List<AttackTypeSummary>();
+			DefensiveHealSummaries = new List<HealTypeSummary>();
 		}
 
 		public void AddOffensiveHit(Attack attack)
@@ -67,10 +63,7 @@ namespace TSW.CombatParser
 
 			// One of the extra ways we can detect mobs
 			if (!IsMob && attackSummary.Name.Equals("attack"))
-			{
 				IsMob = true;
-				OnPropertyChanged("IsMob");
-			}
 		}
 
 		public void AddOffensiveEvade(Attack evade)
@@ -116,54 +109,28 @@ namespace TSW.CombatParser
 		public void AddXp(XpEventArgs e)
 		{
 			TotalXP += e.XP;
-			OnPropertyChanged("XP");
 		}
 
-		private void OffensiveHits_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		public void Refresh()
 		{
-			if (e.PropertyName.Equals("TotalDamage"))
-			{
-				Offensive_TotalDamage = OffensiveHits.TotalDamage;
-				OnPropertyChanged("Offensive_TotalDamage");
-			}
-			else if (e.PropertyName.Equals("DPM"))
-			{
-				Offensive_DPM = OffensiveHits.DPM;
-				OnPropertyChanged("Offensive_DPM");
-			}
-		}
+			OffensiveHits.Refresh();
+			OffensiveHeals.Refresh();
+			OffensiveAttackSummaries.ForEach(s => s.Refresh());
+			
+			DefensiveHits.Refresh();
+			DefensiveHeals.Refresh();
+			DefensiveAttackSummaries.ForEach(s => s.Refresh());
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		private void OnPropertyChanged(string propertyName)
-		{
 			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-		#endregion
-
-		#region IEditableObject implementation
-		public void BeginEdit()
-		{
-			
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
 		}
 
-		public void CancelEdit()
-		{
-			
-		}
-
-		public void EndEdit()
-		{
-
-		}
-		#endregion
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 
 	internal static class AttackSummaryExtensions
 	{
-		public static AttackTypeSummary FindAttackSummary(this ObservableCollection<AttackTypeSummary> summaries, Attack hit, AttackCollection owner)
+		public static AttackTypeSummary FindAttackSummary(this List<AttackTypeSummary> summaries, Attack hit, AttackCollection owner)
 		{
 			AttackTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(hit.AttackType));
 			if (summary == null)
@@ -177,7 +144,7 @@ namespace TSW.CombatParser
 			return summary;
 		}
 
-		public static HealTypeSummary FindHealSummary(this ObservableCollection<HealTypeSummary> summaries, Heal heal, HealCollection owner)
+		public static HealTypeSummary FindHealSummary(this List<HealTypeSummary> summaries, Heal heal, HealCollection owner)
 		{
 			HealTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(heal.HealType));
 			if (summary == null)

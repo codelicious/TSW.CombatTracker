@@ -53,7 +53,53 @@ namespace TSW.CombatParser
 		}
 	}
 
-	public class EncounterCollection : ObservableCollection<Encounter>
+	public class EncounterCollection : ICollection<Encounter>
 	{
+		private List<Encounter> encounters = new List<Encounter>();
+
+		public void Add(Encounter item)
+		{
+			encounters.Add(item);
+		}
+
+		public void Clear()
+		{
+			throw new NotImplementedException();
+		}
+
+		public bool Contains(Encounter item)
+		{
+			return encounters.Contains(item);
+		}
+
+		public void CopyTo(Encounter[] array, int arrayIndex)
+		{
+			encounters.CopyTo(array, arrayIndex);
+		}
+
+		public int Count
+		{
+			get { return encounters.Count; }
+		}
+
+		public bool IsReadOnly
+		{
+			get { return false; }
+		}
+
+		public bool Remove(Encounter item)
+		{
+			return encounters.Remove(item);
+		}
+
+		public IEnumerator<Encounter> GetEnumerator()
+		{
+			return encounters.GetEnumerator();
+		}
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return ((System.Collections.IEnumerable)encounters).GetEnumerator();
+		}
 	}
 }

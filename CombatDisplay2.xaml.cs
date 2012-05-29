@@ -17,60 +17,22 @@ namespace TSW.CombatTracker
 	{
 		public Combat Combat { get; set; }
 
-		private IEditableCollectionView charactersView = null;
-		private IEditableCollectionView damageDealersView = null;
-
-
 		public CombatDisplay2()
 		{
 			InitializeComponent();
 		}
 
-		private void CombatDisplay_Loaded(object sender, RoutedEventArgs e)
+		public void Refresh()
 		{
+			CollectionViewSource cvs = FindResource("CharactersSource") as CollectionViewSource;
+			cvs.View.Refresh();
+
+			Combat.Refresh();
 		}
 
-		private void DamageDealersSource_Filter(object sender, FilterEventArgs e)
+		private void CombatDisplay_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			Character ch = e.Item as Character;
-			if (ch != null)
-				e.Accepted = !ch.IsMob;
-			else
-				e.Accepted = false;
-		}
 
-		private void AttackSummaries_ToolTipOpening(object sender, ToolTipEventArgs e)
-		{
-		}
-
-		private IEditableCollectionView CharactersView
-		{
-			get
-			{
-				if (charactersView == null)
-				{
-					CollectionViewSource charactersSource = FindResource("CharactersSource") as CollectionViewSource;
-					if (charactersSource != null)
-						charactersView = charactersSource.View as IEditableCollectionView;
-				}
-
-				return charactersView;
-			}
-		}
-
-		private IEditableCollectionView DamageDealersView
-		{
-			get
-			{
-				if (damageDealersView == null)
-				{
-					CollectionViewSource damageDealersSource = FindResource("DamageDealersSource") as CollectionViewSource;
-					if (damageDealersSource != null)
-						damageDealersView = damageDealersSource.View as IEditableCollectionView;
-				}
-
-				return damageDealersView;
-			}
 		}
 	}
 }

@@ -76,7 +76,6 @@
     <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FolderDialog.cs" />
     <Compile Include="GridSort.cs" />
-    <Compile Include="ListCollectionView.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

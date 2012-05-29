@@ -10,8 +10,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 FontSize="9"
 			 Background="Black" Foreground="White"
-			 Loaded="CombatDisplay_Loaded"
-             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="500">
+			 DataContextChanged="CombatDisplay_DataContextChanged"
+			 mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="500">
 	<UserControl.Resources>
 		<!--<CollectionViewSource x:Key="CharactersSource"
 							  Source="{Binding Characters}">
@@ -27,8 +27,7 @@
 		</CollectionViewSource>-->
 
 		<CollectionViewSource x:Key="CharactersSource"
-							  Source="{Binding Characters}"
-							  CollectionViewType="{x:Type l:ListCollectionView}">
+							  Source="{Binding Characters}">
 			<CollectionViewSource.SortDescriptions>
 				<w:SortDescription Direction="Ascending" PropertyName="IsMob" />
 				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
@@ -134,7 +133,8 @@
 			</StackPanel.Resources>
 
 			<TextBlock Margin="13,4,8,4">Character:</TextBlock>
-			<ComboBox ItemsSource="{Binding Source={StaticResource CharactersSource}}"					  
+			<ComboBox Name="CharacterSelector"
+					  ItemsSource="{Binding Source={StaticResource CharactersSource}}"					  
 					  Width="225"
 					  IsSynchronizedWithCurrentItem="True">
 				<ComboBox.GroupStyle>

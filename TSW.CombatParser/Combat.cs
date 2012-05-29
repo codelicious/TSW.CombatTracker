@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -13,58 +13,32 @@ namespace TSW.CombatParser
 
 		public EncounterCollection Encounters { get; private set; }
 
-		public ObservableCollection<Character> Characters { get; private set; }
+		public List<Character> Characters { get; private set; }
 
-		public ObservableCollection<Character> Players { get; private set; }
+		public List<Character> Players { get; private set; }
 
-		public ObservableCollection<Character> Mobs { get; private set; }
+		public List<Character> Mobs { get; private set; }
+
+		public Character You { get; private set; }
+
+		public uint TotalLines { get; private set; }
 
 		private CombatParser combatParser;
 
 		private Encounter currentEncounter = null;
 
-		private Character you = null;
-
-		private uint totalLines = 0;
-
 		public Combat()
 		{
 			Encounters = new EncounterCollection();
-			Characters = new ObservableCollection<Character>();
-			Players = new ObservableCollection<Character>();
-			Mobs = new ObservableCollection<Character>();
+			Characters = new List<Character>();
+			Players = new List<Character>();
+			Mobs = new List<Character>();
 
 			combatParser = new CombatParser();
 			combatParser.Hit += combatParser_Hit;
 			combatParser.Evade += combatParser_Evade;
 			combatParser.Heal += combatParser_Heal;
 			combatParser.XP += combatParser_XP;
-		}
-
-		public Character You
-		{
-			get { return you; }
-			private set
-			{
-				if (value != you)
-				{
-					you = value;
-					OnPropertyChanged("You");
-				}
-			}
-		}
-		
-		public uint TotalLines
-		{
-			get { return totalLines; }
-			private set
-			{
-				if (value != totalLines)
-				{
-					totalLines = value;
-					OnPropertyChanged("TotalLines");
-				}
-			}
 		}
 
 		public void Reset()
@@ -160,14 +134,14 @@ namespace TSW.CombatParser
 			return character;
 		}
 
-		#region INotifyPropertyChanged implementation
-		public event PropertyChangedEventHandler PropertyChanged;
-
-		protected void OnPropertyChanged(string propertyName)
+		public void Refresh()
 		{
+			Characters.ForEach(c => c.Refresh());
+
 			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
 		}
-		#endregion
+
+		public event PropertyChangedEventHandler PropertyChanged;
 	}
 }

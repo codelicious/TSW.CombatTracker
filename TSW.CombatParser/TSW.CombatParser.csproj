@@ -47,7 +47,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncFileReader.cs" />
     <Compile Include="AttackTypeSummary.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="Combat.cs" />
