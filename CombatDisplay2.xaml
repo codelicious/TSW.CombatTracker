@@ -10,7 +10,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 FontSize="9"
 			 Background="Black" Foreground="White"
-			 DataContextChanged="CombatDisplay_DataContextChanged"
 			 mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="500">
 	<UserControl.Resources>
 		<!--<CollectionViewSource x:Key="CharactersSource"
@@ -27,17 +26,13 @@
 		</CollectionViewSource>-->
 
 		<CollectionViewSource x:Key="CharactersSource"
-							  Source="{Binding Characters}">
+							  Source="{Binding Characters}"
+							  Filter="CharactersSource_Filter">
 			<CollectionViewSource.SortDescriptions>
-				<w:SortDescription Direction="Ascending" PropertyName="IsMob" />
 				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
 				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
 				<w:SortDescription Direction="Ascending" PropertyName="Name" />
 			</CollectionViewSource.SortDescriptions>
-
-			<CollectionViewSource.GroupDescriptions>
-				<PropertyGroupDescription PropertyName="IsMob" />
-			</CollectionViewSource.GroupDescriptions>
 		</CollectionViewSource>
 
 		<Style x:Key="ColumnsHeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
@@ -159,7 +154,6 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 		</StackPanel>
-
 
 		<GroupBox x:Name="OffensiveStatsGroup" Header="Offensive Stats" DockPanel.Dock="Top"
 				  IsHitTestVisible="False"

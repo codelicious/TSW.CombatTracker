@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Data;
+using System.Collections.ObjectModel;
 
 namespace TSW.CombatParser
 {
@@ -14,10 +15,6 @@ namespace TSW.CombatParser
 		public EncounterCollection Encounters { get; private set; }
 
 		public List<Character> Characters { get; private set; }
-
-		public List<Character> Players { get; private set; }
-
-		public List<Character> Mobs { get; private set; }
 
 		public Character You { get; private set; }
 
@@ -31,8 +28,6 @@ namespace TSW.CombatParser
 		{
 			Encounters = new EncounterCollection();
 			Characters = new List<Character>();
-			Players = new List<Character>();
-			Mobs = new List<Character>();
 
 			combatParser = new CombatParser();
 			combatParser.Hit += combatParser_Hit;
@@ -125,18 +120,19 @@ namespace TSW.CombatParser
 				}
 
 				Characters.Add(character);
-				if (!character.IsMob)
-					Players.Add(character);
-				else
-					Mobs.Add(character);
 			}
 
 			return character;
 		}
 
+		public void Test()
+		{
+			Characters.ToList().ForEach(c => c.AddOffensiveHit(new Attack(new HitEventArgs() { Attacker = "Big Mob", AttackType = "attack", Target = "You", Damage = 13, Type = "physical", Timestamp = DateTime.Now })));
+		}
+
 		public void Refresh()
 		{
-			Characters.ForEach(c => c.Refresh());
+			Characters.ToList().ForEach(c => c.Refresh());
 
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(null));

@@ -119,9 +119,9 @@ namespace TSW.CombatParser
 				
 				uint damage;
 				if (uint.TryParse(m.Groups[6].Value, out damage))
-					hit.DamageType = damage;
+					hit.Damage = damage;
 				else
-					hit.DamageType = 0;
+					hit.Damage = 0;
 				
 				string critical = m.Groups[2].Value;
 				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
@@ -164,9 +164,9 @@ namespace TSW.CombatParser
 
 				uint damage;
 				if (uint.TryParse(m.Groups[6].Value, out damage))
-					hit.DamageType = damage;
+					hit.Damage = damage;
 				else
-					hit.DamageType = 0;
+					hit.Damage = 0;
 
 				string critical = m.Groups[2].Value;
 				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
@@ -209,9 +209,9 @@ namespace TSW.CombatParser
 
 				uint damage;
 				if (uint.TryParse(m.Groups[7].Value, out damage))
-					hit.DamageType = damage;
+					hit.Damage = damage;
 				else
-					hit.DamageType = 0;
+					hit.Damage = 0;
 
 				string critical = m.Groups[2].Value;
 				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
@@ -378,7 +378,7 @@ namespace TSW.CombatParser
 		public string Attacker { get; set; }
 		public string Target { get; set; }
 		public string AttackType { get; set; }
-		public uint DamageType { get; set; }
+		public uint Damage { get; set; }
 		public string Type { get; set; }
 		public bool Critical { get; set; }
 		public bool Glancing { get; set; }

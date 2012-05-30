@@ -26,7 +26,7 @@ namespace TSW.CombatParser
 			Attacker = e.Attacker;
 			Target = e.Target;
 			AttackType = e.AttackType;
-			Damage = e.DamageType;
+			Damage = e.Damage;
 			DamageType = e.Type;
 			Critical = e.Critical;
 			Glancing = e.Glancing;

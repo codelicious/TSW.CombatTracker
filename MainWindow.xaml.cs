@@ -150,14 +150,17 @@ namespace TSW.CombatTracker
 			combatDisplayUpdater = Observable.Interval(TimeSpan.FromSeconds(1.0)).ObserveOnDispatcher().Subscribe(i =>
 				{
 					CombatDisplay.Refresh();
-					//object context = CombatDisplay.DataContext;
-					//CombatDisplay.DataContext = null;
-					//CombatDisplay.DataContext = context;
 				});
 		}
 
 		public void Reset()
 		{
+			if (combatDisplayUpdater != null)
+			{
+				combatDisplayUpdater.Dispose();
+				combatDisplayUpdater = null;
+			}
+
 			if (logWatcher != null)
 			{
 				logWatcher.Dispose();
@@ -177,6 +180,8 @@ namespace TSW.CombatTracker
 
 			CombatLog = null;
 			OnPropertyChanged("CombatLog");
+
+			CombatDisplay.Reset();
 		}
 
 		private void VerifyLogFolder()
@@ -186,6 +191,7 @@ namespace TSW.CombatTracker
 			{
 				SelectFolderDialog dlg = new SelectFolderDialog();
 				dlg.SetTitle("Select The Secret World Installation Folder");
+				dlg.SetFileName("The Secret World");
 				if (dlg.ShowDialog())
 				{
 					Properties.Settings.Default["TSWFolder"] = dlg.FolderName;
@@ -194,7 +200,6 @@ namespace TSW.CombatTracker
 				else
 					Application.Current.Shutdown();
 			}
-
 		}
 
 		#region INotifyPropertyChanged region

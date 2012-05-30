@@ -445,6 +445,11 @@ namespace TSW.CombatTracker
 		{
 			ifod.SetTitle(title);
 		}
+
+		public void SetFileName(string filename)
+		{
+			ifod.SetFileName(filename);
+		}
 	}
 
 }

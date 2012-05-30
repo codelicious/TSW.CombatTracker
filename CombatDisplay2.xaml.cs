@@ -24,15 +24,30 @@ namespace TSW.CombatTracker
 
 		public void Refresh()
 		{
-			CollectionViewSource cvs = FindResource("CharactersSource") as CollectionViewSource;
-			cvs.View.Refresh();
+			CollectionViewSource source = FindResource("CharactersSource") as CollectionViewSource;
+			IEditableCollectionView view = source.View as IEditableCollectionView;
+			foreach (Character character in Combat.Characters)
+			{
+				view.EditItem(character);
+				view.CommitEdit();
+			}
 
 			Combat.Refresh();
 		}
 
-		private void CombatDisplay_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		public void Reset()
 		{
+			CollectionViewSource source = FindResource("CharactersSource") as CollectionViewSource;
+			source.View.Refresh();
+		}
 
+		private void CharactersSource_Filter(object sender, FilterEventArgs e)
+		{
+			Character character = e.Item as Character;
+			if (character != null)
+				e.Accepted = !character.IsMob;
+			else
+				e.Accepted = true;
 		}
 	}
 }
