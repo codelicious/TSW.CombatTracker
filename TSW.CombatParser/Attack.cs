@@ -94,7 +94,7 @@ namespace TSW.CombatParser
 			{
 				TimeSpan interval;
 				double damage = GetRecentDamage(300.0, out interval);
-				return damage / (interval.TotalMinutes / 5);
+				return damage / interval.TotalMinutes;
 			}
 		}
 
@@ -131,10 +131,10 @@ namespace TSW.CombatParser
 				damageInterval = interval;
 			}
 
-			if (damageInterval.TotalSeconds >= seconds)
+			if (damageInterval.TotalSeconds >= 1.0)
 				actualInterval = damageInterval;
 			else
-				actualInterval = TimeSpan.FromSeconds(seconds);
+				actualInterval = TimeSpan.FromSeconds(1.0);
 
 			return recentDamage;
 		}
