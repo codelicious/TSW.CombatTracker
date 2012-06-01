@@ -31,8 +31,6 @@ namespace TSW.CombatParser
 
 		public void Refresh()
 		{
-			Hits.Refresh();
-
 			if (PropertyChanged != null)
 				PropertyChanged(this, new PropertyChangedEventArgs(null));
 		}

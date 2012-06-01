@@ -37,5 +37,10 @@ namespace TSW.CombatParser
 			TotalHealth += heal.Amount;
 			++TotalHeals;
 		}
+
+		public void Refresh()
+		{
+			Heals.Refresh();
+		}
 	}
 }

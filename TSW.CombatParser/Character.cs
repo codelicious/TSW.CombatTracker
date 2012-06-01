@@ -23,14 +23,14 @@ namespace TSW.CombatParser
 
 		public AttackCollection OffensiveHits { get; private set; }
 		public HealCollection OffensiveHeals { get; private set; }
-		public List<AttackTypeSummary> OffensiveAttackSummaries { get; private set; }
-		public List<HealTypeSummary> OffensiveHealSummaries { get; private set; }
+		public RefreshList<AttackTypeSummary> OffensiveAttackSummaries { get; private set; }
+		public RefreshList<HealTypeSummary> OffensiveHealSummaries { get; private set; }
 
 
 		public AttackCollection DefensiveHits { get; private set; }
 		public HealCollection DefensiveHeals { get; private set; }
-		public List<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
-		public List<HealTypeSummary> DefensiveHealSummaries { get; private set; }
+		public RefreshList<AttackTypeSummary> DefensiveAttackSummaries { get; private set; }
+		public RefreshList<HealTypeSummary> DefensiveHealSummaries { get; private set; }
 
 		public uint TotalXP { get; private set; }
 
@@ -45,13 +45,13 @@ namespace TSW.CombatParser
 		{
 			OffensiveHits = new AttackCollection();
 			OffensiveHeals = new HealCollection();
-			OffensiveAttackSummaries = new List<AttackTypeSummary>();
-			OffensiveHealSummaries = new List<HealTypeSummary>();
+			OffensiveAttackSummaries = new RefreshList<AttackTypeSummary>();
+			OffensiveHealSummaries = new RefreshList<HealTypeSummary>();
 
 			DefensiveHits = new AttackCollection();
 			DefensiveHeals = new HealCollection();
-			DefensiveAttackSummaries = new List<AttackTypeSummary>();
-			DefensiveHealSummaries = new List<HealTypeSummary>();
+			DefensiveAttackSummaries = new RefreshList<AttackTypeSummary>();
+			DefensiveHealSummaries = new RefreshList<HealTypeSummary>();
 		}
 
 		public void AddOffensiveHit(Attack attack)
@@ -113,18 +113,24 @@ namespace TSW.CombatParser
 
 		public void Refresh()
 		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(null));
+
 			OffensiveHits.Refresh();
 			OffensiveHeals.Refresh();
-			OffensiveAttackSummaries.ForEach(s => s.Refresh());
+			OffensiveAttackSummaries.Refresh();
+			foreach (AttackTypeSummary summary in OffensiveAttackSummaries) summary.Refresh();
+			OffensiveHealSummaries.Refresh();
+			foreach (HealTypeSummary summary in OffensiveHealSummaries) summary.Refresh();
 			Offensive_TotalDamage = OffensiveHits.TotalDamage;
 			Offensive_DPM = OffensiveHits.DPM;
 			
 			DefensiveHits.Refresh();
 			DefensiveHeals.Refresh();
-			DefensiveAttackSummaries.ForEach(s => s.Refresh());
-
-			if (PropertyChanged != null)
-				PropertyChanged(this, new PropertyChangedEventArgs(null));
+			DefensiveAttackSummaries.Refresh();
+			foreach (AttackTypeSummary summary in DefensiveAttackSummaries) summary.Refresh();
+			DefensiveHealSummaries.Refresh();
+			foreach (HealTypeSummary summary in DefensiveHealSummaries) summary.Refresh();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -132,7 +138,7 @@ namespace TSW.CombatParser
 
 	internal static class AttackSummaryExtensions
 	{
-		public static AttackTypeSummary FindAttackSummary(this List<AttackTypeSummary> summaries, Attack hit, AttackCollection owner)
+		public static AttackTypeSummary FindAttackSummary(this RefreshList<AttackTypeSummary> summaries, Attack hit, AttackCollection owner)
 		{
 			AttackTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(hit.AttackType));
 			if (summary == null)
@@ -146,7 +152,7 @@ namespace TSW.CombatParser
 			return summary;
 		}
 
-		public static HealTypeSummary FindHealSummary(this List<HealTypeSummary> summaries, Heal heal, HealCollection owner)
+		public static HealTypeSummary FindHealSummary(this RefreshList<HealTypeSummary> summaries, Heal heal, HealCollection owner)
 		{
 			HealTypeSummary summary = summaries.FirstOrDefault(s => s.Name.Equals(heal.HealType));
 			if (summary == null)
