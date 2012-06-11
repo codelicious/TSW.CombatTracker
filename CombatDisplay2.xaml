@@ -2,8 +2,6 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
-			 xmlns:f="clr-namespace:FlowDocuments;assembly="
-			 xmlns:o="clr-namespace:OpenSourceControls;assembly="
 			 xmlns:w="clr-namespace:System.ComponentModel;assembly=WindowsBase"
 			 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -131,7 +129,10 @@
 			<ComboBox Name="CharacterSelector"
 					  ItemsSource="{Binding Source={StaticResource CharactersSource}}"					  
 					  Width="225"
-					  IsSynchronizedWithCurrentItem="True">
+					  IsSynchronizedWithCurrentItem="True"
+					  MouseEnter="CharacterSelector_MouseEnter"
+					  MouseLeave="CharacterSelector_MouseLeave"
+					  MouseWheel="CharacterSelector_MouseWheel">
 				<ComboBox.GroupStyle>
 					<GroupStyle>
 						<GroupStyle.HeaderTemplate>

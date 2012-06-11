@@ -33,6 +33,7 @@ namespace TSW.CombatParser
 			combatParser.Hit += combatParser_Hit;
 			combatParser.Evade += combatParser_Evade;
 			combatParser.Heal += combatParser_Heal;
+			combatParser.Absorb += combatParser_Absorb;
 			combatParser.XP += combatParser_XP;
 		}
 
@@ -87,6 +88,20 @@ namespace TSW.CombatParser
 
 			Character healed = FindCharacter(e.Target);
 			healed.AddDefensiveHeal(heal);
+		}
+
+		private void combatParser_Absorb(object sender, AbsorbEventArgs e)
+		{
+			UpdateEncounter(e.Timestamp);
+
+			Attack attack = new Attack(e);
+			currentEncounter.AddAttack(attack);
+
+			Character attacker = FindCharacter(e.Attacker);
+			attacker.AddOffensiveHit(attack);
+
+			Character target = FindCharacter(e.Target);
+			target.AddDefensiveHit(attack);
 		}
 
 		private void combatParser_XP(object sender, XpEventArgs e)

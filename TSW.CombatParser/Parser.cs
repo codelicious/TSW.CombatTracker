@@ -8,9 +8,9 @@ namespace TSW.CombatParser
 {
 	public class CombatParser
 	{
-		static Regex yourHitEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}Your (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
-		static Regex otherHitYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) you for (\d+) (physical|magical) damage. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
-		static Regex otherHitOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex yourHitEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}Your (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex otherHitYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) you for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex otherHitOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
 		static Regex interrupedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] Interrupted!", RegexOptions.Compiled);
 
 		static Regex otherEvadedYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded your ([\w\s]+)\.", RegexOptions.Compiled);
@@ -20,12 +20,16 @@ namespace TSW.CombatParser
 		static Regex youHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}Your ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
 		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([\w\s]+)\'s ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
 
+		static Regex youAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
+		static Regex otherAbsorbed = new Regex(@"", RegexOptions.Compiled);
+
 		static Regex youGainedXpEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] You gained (\d+) XP\.", RegexOptions.Compiled);
 
 
 		public event EventHandler<HitEventArgs> Hit;
 		public event EventHandler<EvadeEventArgs> Evade;
 		public event EventHandler<HealEventArgs> Heal;
+		public event EventHandler<AbsorbEventArgs> Absorb;
 		public event EventHandler<XpEventArgs> XP;
 
 		public void Parse(string line)
@@ -83,6 +87,13 @@ namespace TSW.CombatParser
 			if (m.Success)
 			{
 				OnOtherHealed(m);
+				return;
+			}
+
+			m = youAbsorbed.Match(line);
+			if (m.Success)
+			{
+				OnYouAbsorbed(m);
 				return;
 			}
 
@@ -350,6 +361,32 @@ namespace TSW.CombatParser
 			}
 		}
 
+		void OnYouAbsorbed(Match m)
+		{
+			if (Absorb != null)
+			{
+				AbsorbEventArgs absorb = new AbsorbEventArgs();
+
+				DateTime timestamp;
+				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
+					absorb.Timestamp = timestamp;
+				else
+					absorb.Timestamp = DateTime.MinValue;
+
+				absorb.Attacker = m.Groups[4].Value;
+				absorb.Target = "You";
+				absorb.BarrierType = m.Groups[2].Value;
+
+				uint damage;
+				if (uint.TryParse(m.Groups[3].Value, out damage))
+					absorb.Damage = damage;
+				else
+					absorb.Damage = 0;
+
+				Absorb(null, absorb);
+			}
+		}
+
 		void OnXpGain(Match m)
 		{
 			if (XP != null)
@@ -402,6 +439,15 @@ namespace TSW.CombatParser
 		public string HealType { get; set; }
 		public uint Amount { get; set; }
 		public bool Critical { get; set; }
+	}
+
+	public class AbsorbEventArgs : EventArgs
+	{
+		public DateTime Timestamp { get; set; }
+		public string Attacker { get; set; }
+		public string Target { get; set; }
+		public string BarrierType { get; set; }
+		public uint Damage { get; set; }
 	}
 
 	public class XpEventArgs : EventArgs

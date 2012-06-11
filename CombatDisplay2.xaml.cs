@@ -49,5 +49,40 @@ namespace TSW.CombatTracker
 			else
 				e.Accepted = true;
 		}
+
+		private MouseWheel mouseWheelHook = null;
+
+		private void CharacterSelector_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+		{
+#if false
+			if (mouseWheelHook == null)
+			{
+				mouseWheelHook = new MouseWheel();
+				mouseWheelHook.MouseWheelEvent += mouseWheelHook_MouseWheelEvent;
+				mouseWheelHook.Capture();
+			}
+#endif
+		}
+
+		private void CharacterSelector_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+		{
+#if false
+			if (mouseWheelHook != null)
+			{
+				mouseWheelHook.Dispose();
+				mouseWheelHook = null;
+			}
+#endif
+		}
+
+		void mouseWheelHook_MouseWheelEvent(int code, UIntPtr wParam, UIntPtr lParam)
+		{
+			throw new NotImplementedException();
+		}
+
+		private void CharacterSelector_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+		{
+		}
+
 	}
 }

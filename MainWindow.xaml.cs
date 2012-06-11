@@ -60,6 +60,24 @@ namespace TSW.CombatTracker
 
 		private IDisposable combatDisplayUpdater = null;
 
+		protected override void OnMouseEnter(MouseEventArgs e)
+		{
+			if (MinButton.IsChecked.HasValue && MinButton.IsChecked.Value)
+			{
+				ContentPanel.Visibility = Visibility.Visible;
+				Height = normalHeight;
+			}
+		}
+
+		protected override void OnMouseLeave(MouseEventArgs e)
+		{
+			if (MinButton.IsChecked.HasValue && MinButton.IsChecked.Value)
+			{
+				normalHeight = Height;
+				ContentPanel.Visibility = Visibility.Collapsed;
+				Height = Double.NaN;
+			}
+		}
 
 		private void RunButton_Checked(object sender, RoutedEventArgs e)
 		{
@@ -88,6 +106,7 @@ namespace TSW.CombatTracker
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
 			combatParser.Reset();
+			CombatDisplay.Refresh();
 		}
 
 		double normalHeight = Double.NaN;
@@ -144,13 +163,13 @@ namespace TSW.CombatTracker
 				combatParser.ProcessLine(line);
 			});
 
+			combatDisplayUpdater = logReader.Update.ObserveOnDispatcher().Subscribe((b) =>
+			{
+				CombatDisplay.Refresh();
+			});
+
 			FileStream combatStream = File.Open(combatLog.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			logReader.Read(combatStream);
-
-			combatDisplayUpdater = Observable.Interval(TimeSpan.FromSeconds(1.0)).ObserveOnDispatcher().Subscribe(i =>
-				{
-					CombatDisplay.Refresh();
-				});
 		}
 
 		public void Reset()

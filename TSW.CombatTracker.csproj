@@ -66,7 +66,6 @@
     <Compile Include="CombatDisplay2.xaml.cs">
       <DependentUpon>CombatDisplay2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DockPanelSplitter.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FlowDocuments\Attached.cs" />
     <Compile Include="FlowDocuments\BindableRun.cs" />
@@ -79,6 +78,7 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MouseWheel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -92,7 +92,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SortDescription.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -133,7 +132,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy ..\..\$(ConfigurationName)\MouseWheelHook.dll
+copy ..\..\$(ConfigurationName)\MouseWheelHook.pdb</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

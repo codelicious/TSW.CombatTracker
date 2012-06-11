@@ -19,6 +19,7 @@ namespace TSW.CombatParser
 		public bool Blocked { get; set; }
 		public bool Penetrated { get; set; }
 		public bool Evaded { get; set; }
+		public bool Absorbed { get; set; }
 
 		public Attack(HitEventArgs e)
 		{
@@ -32,6 +33,7 @@ namespace TSW.CombatParser
 			Glancing = e.Glancing;
 			Blocked = e.Blocked;
 			Penetrated = e.Penetrated;
+			Absorbed = false;
 			Evaded = false;
 		}
 
@@ -47,7 +49,24 @@ namespace TSW.CombatParser
 			Glancing = false;
 			Blocked = false;
 			Penetrated = false;
+			Absorbed = false;
 			Evaded = true;
+		}
+
+		public Attack(AbsorbEventArgs e)
+		{
+			Timestamp = e.Timestamp;
+			Attacker = e.Attacker;
+			Target = e.Target;
+			AttackType = e.BarrierType;
+			Damage = e.Damage;
+			DamageType = String.Empty;
+			Critical = false;
+			Penetrated = false;
+			Glancing = false;
+			Blocked = false;
+			Absorbed = true;
+			Evaded = false;
 		}
 	}
 }
