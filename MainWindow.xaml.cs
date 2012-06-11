@@ -133,11 +133,12 @@ namespace TSW.CombatTracker
 		{
 			DirectoryInfo tswFolder = new DirectoryInfo(Properties.Settings.Default["TSWFolder"] as String);
 
-			var combatLogQuery = (from combatLog in tswFolder.GetFiles("Combat*")
-								  orderby combatLog.Name
-								  select combatLog);
-
-			ProcessLog(combatLogQuery.Last());
+			var combatLogQuery = from combatLog in tswFolder.GetFiles("Combat*")
+								 orderby combatLog.Name
+								 select combatLog;
+			
+			if (combatLogQuery.Count() > 0)
+				ProcessLog(combatLogQuery.Last());
 
 			fileWatcher = new FileSystemWatcher(tswFolder.FullName, "Combat*.txt");
 
