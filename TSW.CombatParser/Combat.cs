@@ -14,7 +14,7 @@ namespace TSW.CombatParser
 
 		public EncounterCollection Encounters { get; private set; }
 
-		public List<Character> Characters { get; private set; }
+		public ObservableCollection<Character> Characters { get; private set; }
 
 		public Character You { get; private set; }
 
@@ -27,7 +27,7 @@ namespace TSW.CombatParser
 		public Combat()
 		{
 			Encounters = new EncounterCollection();
-			Characters = new List<Character>();
+			Characters = new ObservableCollection<Character>();
 
 			combatParser = new CombatParser();
 			combatParser.Hit += combatParser_Hit;
