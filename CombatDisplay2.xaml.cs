@@ -54,19 +54,35 @@ namespace TSW.CombatTracker
 
 		private void CharacterSelector_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 		{
-#if false
-			if (mouseWheelHook == null)
+#if HOOK_SCROLL
+			Window parent = FindVisualParent<Window>(this);
+			if (parent != null && !parent.IsActive)
 			{
-				mouseWheelHook = new MouseWheel();
-				mouseWheelHook.MouseWheelEvent += mouseWheelHook_MouseWheelEvent;
-				mouseWheelHook.Capture();
+				if (mouseWheelHook == null)
+				{
+					mouseWheelHook = new MouseWheel();
+					mouseWheelHook.MouseWheelEvent += mouseWheelHook_MouseWheelEvent;
+					mouseWheelHook.Capture();
+				}
 			}
 #endif
 		}
 
+		private T FindVisualParent<T>(DependencyObject reference) where T : DependencyObject
+		{
+			DependencyObject parent = reference;
+
+			do
+			{
+				parent = VisualTreeHelper.GetParent(parent);
+			} while (parent != null && !(parent.GetType().IsSubclassOf(typeof(T))));
+
+			return parent as T;
+		}
+
 		private void CharacterSelector_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
 		{
-#if false
+#if HOOK_SCROLL
 			if (mouseWheelHook != null)
 			{
 				mouseWheelHook.Dispose();

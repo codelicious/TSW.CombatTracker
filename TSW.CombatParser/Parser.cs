@@ -13,12 +13,12 @@ namespace TSW.CombatParser
 		static Regex otherHitOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
 		static Regex interrupedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] Interrupted!", RegexOptions.Compiled);
 
-		static Regex otherEvadedYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded your ([\w\s]+)\.", RegexOptions.Compiled);
-		static Regex youEvadeOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (You) evade ([\w\s]+)\'s ([\w\s]+)\.", RegexOptions.Compiled);
-		static Regex otherEvadedOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] ([\w\s]+) evaded ([\w\s]+)\'s ([\w\s]+)\.", RegexOptions.Compiled);
+		static Regex otherEvadedYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) evaded your (.+)\.", RegexOptions.Compiled);
+		static Regex youEvadeOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (You) evade ([^\']+)\'s (.+)\.", RegexOptions.Compiled);
+		static Regex otherEvadedOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) evaded ([^\']+)\'s (.+)\.", RegexOptions.Compiled);
 
-		static Regex youHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}Your ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
-		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([\w\s]+)\'s ([\w\s]+) heals ([\w\s]+) for (\d+)\.", RegexOptions.Compiled);
+		static Regex youHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}Your (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
+		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([^\']+)\'s (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
 
 		static Regex youAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
 		static Regex otherAbsorbed = new Regex(@"", RegexOptions.Compiled);
