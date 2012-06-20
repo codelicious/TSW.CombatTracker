@@ -36,6 +36,18 @@ namespace TSW.CombatTracker
 			CombatDisplay.Combat = Combat;
 
 			DataContext = this;
+
+			DirectoryInfo tswFolder = new DirectoryInfo(Properties.Settings.Default["TSWFolder"] as String);
+
+			fileWatcher = new FileSystemWatcher(tswFolder.FullName, "Combat*.txt");
+
+			logWatcher = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
+				h => fileWatcher.Created += h,
+				h => fileWatcher.Deleted -= h).ObserveOnDispatcher().Subscribe(e =>
+				{
+					Reset();
+					ProcessLog(new FileInfo(e.EventArgs.FullPath), true);
+				});
 		}
 
 		public Combat Combat { get { return combatParser; } }
@@ -86,7 +98,7 @@ namespace TSW.CombatTracker
 				SelectFileDialog dlg = new SelectFileDialog();
 				if (dlg.ShowDialog())
 				{
-					ProcessLog(new FileInfo(dlg.Filename));
+					ProcessLog(new FileInfo(dlg.Filename), false);
 				}
 				else
 					RunButton.IsChecked = false;
@@ -95,11 +107,15 @@ namespace TSW.CombatTracker
 			{
 				// Start processing the logs
 				Run();
+
+				fileWatcher.EnableRaisingEvents = true;
 			}
 		}
 
 		private void RunButton_Unchecked(object sender, RoutedEventArgs e)
 		{
+			fileWatcher.EnableRaisingEvents = false;
+
 			Reset();
 		}
 
@@ -139,22 +155,10 @@ namespace TSW.CombatTracker
 								 select combatLog;
 			
 			if (combatLogQuery.Count() > 0)
-				ProcessLog(combatLogQuery.Last());
-
-			fileWatcher = new FileSystemWatcher(tswFolder.FullName, "Combat*.txt");
-
-			logWatcher = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-				h => fileWatcher.Created += h,
-				h => fileWatcher.Deleted -= h).ObserveOnDispatcher().Subscribe(e =>
-					{
-						Reset();
-						ProcessLog(new FileInfo(e.EventArgs.FullPath));
-					});
-
-			fileWatcher.EnableRaisingEvents = true;
+				ProcessLog(combatLogQuery.Last(), true);
 		}
 
-		public void ProcessLog(FileInfo combatLog)
+		public void ProcessLog(FileInfo combatLog, bool monitorChanges)
 		{
 			CombatLog = combatLog;
 			OnPropertyChanged("CombatLog");
@@ -180,12 +184,6 @@ namespace TSW.CombatTracker
 			{
 				combatDisplayUpdater.Dispose();
 				combatDisplayUpdater = null;
-			}
-
-			if (logWatcher != null)
-			{
-				logWatcher.Dispose();
-				logWatcher = null;
 			}
 
 			if (logSubject != null)
