@@ -11,7 +11,14 @@ HHOOK mouseHook = NULL;
 
 static LRESULT CALLBACK MouseHookLLCallback(int code, WPARAM wParam, LPARAM lParam);
 
-bool Register(HookProc proc, DWORD threadId)
+extern "C" __declspec(dllexport)
+void Load()
+{
+	// just get the dll loaded;
+}
+
+extern "C" __declspec(dllexport)
+bool Register(HookProc proc)
 {
 	if (g_appInstance == NULL)
 		return false;
@@ -26,16 +33,18 @@ bool Register(HookProc proc, DWORD threadId)
 		return false;
 
 	userProc = proc;
-	mouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, (HOOKPROC)MouseHookLLCallback, g_appInstance, threadId);
+	mouseHook = ::SetWindowsHookEx(WH_MOUSE_LL, (HOOKPROC)MouseHookLLCallback, g_appInstance, 0);
 	return mouseHook != NULL;
 }
 
+extern "C" __declspec(dllexport)
 void Unregister()
 {
 	if (mouseHook != NULL)
 	{
 		::UnhookWindowsHookEx(mouseHook);
 		mouseHook = NULL;
+		userProc = NULL;
 	}
 }
 

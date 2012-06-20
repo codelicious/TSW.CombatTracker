@@ -9,13 +9,14 @@ namespace TSW.CombatTracker
 {
 	public class MouseWheel : IDisposable
 	{
-		MouseWheelEventHandler handler = null;
-
 		public void Capture()
 		{
-			handler = new MouseWheelEventHandler(MouseWheel_MouseWheelEvent);
-
-			Register(handler, 0);
+			System.Diagnostics.Debug.WriteLine("Capture mouse events");
+			Register((code, wParam, lParam) =>
+			{
+				if (MouseWheelEvent != null)
+					MouseWheelEvent(code, wParam, lParam);
+			});
 		}
 
 		private void MouseWheel_MouseWheelEvent(int code, UIntPtr wParam, UIntPtr lParam)
@@ -24,6 +25,7 @@ namespace TSW.CombatTracker
 
 		public void Release()
 		{
+			System.Diagnostics.Debug.WriteLine("Release mouse events");
 			Unregister();
 		}
 
@@ -34,15 +36,15 @@ namespace TSW.CombatTracker
 
 		public event MouseWheelEventHandler MouseWheelEvent;
 
-		[DllImport("MouseWheelHook.dll", EntryPoint = "Register", SetLastError = false,
-			CallingConvention = CallingConvention.StdCall)]
-		private static extern bool Register(MouseWheelEventHandler handler, int threadId);
+		[DllImport("MouseWheelHook.dll", CallingConvention = CallingConvention.StdCall, SetLastError = false)]
+		private static extern void Load();
 
-		[DllImport("MouseWheelHook.dll", EntryPoint = "Unregister", SetLastError = false,
-			CallingConvention = CallingConvention.StdCall)]
+		[DllImport("MouseWheelHook.dll", SetLastError = false, CallingConvention = CallingConvention.StdCall)]
+		private static extern bool Register(MouseWheelEventHandler handler);
+
+		[DllImport("MouseWheelHook.dll", SetLastError = false, CallingConvention = CallingConvention.StdCall)]
 		private static extern bool Unregister();
 	}
 
 	public delegate void MouseWheelEventHandler(int code, UIntPtr wParam, UIntPtr lParam);
-
 }
