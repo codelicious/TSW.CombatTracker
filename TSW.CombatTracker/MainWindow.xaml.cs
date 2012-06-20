@@ -105,7 +105,8 @@ namespace TSW.CombatTracker
 
 		private void ClearButton_Click(object sender, RoutedEventArgs e)
 		{
-			combatParser.Reset();
+			bool wipeCharacters = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
+			combatParser.Reset(wipeCharacters);
 			CombatDisplay.Refresh();
 		}
 
@@ -194,9 +195,12 @@ namespace TSW.CombatTracker
 			}
 
 			if (logReader != null)
+			{
 				logReader.Close();
+				logReader = null;
+			}
 
-			combatParser.Reset();
+			combatParser.Reset(true);
 
 			CombatLog = null;
 			OnPropertyChanged("CombatLog");

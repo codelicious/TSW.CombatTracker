@@ -37,9 +37,13 @@ namespace TSW.CombatParser
 			combatParser.XP += combatParser_XP;
 		}
 
-		public void Reset()
+		public void Reset(bool wipeCharacters)
 		{
-			Characters.Clear();
+			if (wipeCharacters)
+				Characters.Clear();
+			else
+				Characters.ToList().ForEach(c => c.Reset());
+			
 			CombatLog = null;
 
 			You = null;

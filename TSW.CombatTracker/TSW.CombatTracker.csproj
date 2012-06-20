@@ -38,11 +38,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Reactive">
-      <HintPath>packages\Rx-Main.1.0.11226\lib\Net4\System.Reactive.dll</HintPath>
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Main.1.0.11226\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
-      <HintPath>packages\Rx-WPF.1.0.11226\lib\Net4\System.Reactive.Windows.Threading.dll</HintPath>
+    <Reference Include="System.Reactive.Windows.Threading, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-WPF.1.0.11226\lib\Net4\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -105,7 +105,7 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="TSW.CombatParser\TSW.CombatParser.csproj">
+    <ProjectReference Include="..\TSW.CombatParser\TSW.CombatParser.csproj">
       <Project>{2EDFBE7A-A25F-471B-8BC0-14269FBE925A}</Project>
       <Name>TSW.CombatParser</Name>
     </ProjectReference>
@@ -135,8 +135,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy ..\..\$(ConfigurationName)\MouseWheelHook.dll
-copy ..\..\$(ConfigurationName)\MouseWheelHook.pdb</PostBuildEvent>
+    <PostBuildEvent>copy "$(SolutionDir)MouseWheelHook\$(ConfigurationName)\MouseWheelHook.dll"
+copy "$(SolutionDir)MouseWheelHook\$(ConfigurationName)\MouseWheelHook.pdb"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -111,6 +111,19 @@ namespace TSW.CombatParser
 			TotalXP += e.XP;
 		}
 
+		public void Reset()
+		{
+			OffensiveHits.Clear();
+			OffensiveAttackSummaries.Clear();
+			OffensiveHeals.Clear();
+			OffensiveHealSummaries.Clear();
+
+			DefensiveHits.Clear();
+			DefensiveAttackSummaries.Clear();
+			DefensiveHeals.Clear();
+			DefensiveHealSummaries.Clear();
+		}
+
 		public void Refresh()
 		{
 			if (PropertyChanged != null)

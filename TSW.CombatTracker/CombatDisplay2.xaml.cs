@@ -24,6 +24,8 @@ namespace TSW.CombatTracker
 
 		public void Refresh()
 		{
+			Combat.Refresh();
+
 			CollectionViewSource source = FindResource("CharactersSource") as CollectionViewSource;
 			IEditableCollectionView view = source.View as IEditableCollectionView;
 			foreach (Character character in Combat.Characters)
@@ -31,8 +33,6 @@ namespace TSW.CombatTracker
 				view.EditItem(character);
 				view.CommitEdit();
 			}
-
-			Combat.Refresh();
 		}
 
 		public void Reset()
