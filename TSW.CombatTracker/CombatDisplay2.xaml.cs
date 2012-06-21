@@ -50,7 +50,9 @@ namespace TSW.CombatTracker
 				e.Accepted = true;
 		}
 
+#if HOOK_SCROLL
 		private MouseWheel mouseWheelHook = null;
+#endif
 
 		private void CharacterSelector_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
 		{
