@@ -8,7 +8,7 @@
 		Left="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowLeft, Mode=TwoWay}"
 		Top="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowTop, Mode=TwoWay}"
 		Width="577" Height="388"
-		ResizeMode="CanResizeWithGrip" SizeToContent="WidthAndHeight"
+		ResizeMode="NoResize" SizeToContent="WidthAndHeight"
 		Topmost="True" AllowsTransparency="True" WindowStyle="None">
 	<Window.Style>
 		<Style TargetType="Window">
@@ -74,7 +74,7 @@
 				</ToggleButton>
 
 				<ToggleButton x:Name="PinButton" IsChecked="True" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
-					<ToggleButton.ToolTip>Pin</ToggleButton.ToolTip>
+					<ToggleButton.ToolTip>Transparent</ToggleButton.ToolTip>
 					<!-- TODO: Add button images -->
 				</ToggleButton>
 

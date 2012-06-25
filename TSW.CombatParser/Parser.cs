@@ -8,6 +8,11 @@ namespace TSW.CombatParser
 {
 	public class CombatParser
 	{
+		static Regex youBeganAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] You start using (.+)\.", RegexOptions.Compiled);
+		static Regex youFinishedAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] You successfully used (.+)\.", RegexOptions.Compiled);
+		static Regex otherBeganAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) starts using (.+)\.", RegexOptions.Compiled);
+		static Regex otherFinishedAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) successfully used the (.+)\.", RegexOptions.Compiled);
+
 		static Regex yourHitEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}Your (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
 		static Regex otherHitYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) you for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
 		static Regex otherHitOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
@@ -21,7 +26,7 @@ namespace TSW.CombatParser
 		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([^\']+)\'s (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
 
 		static Regex youAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
-		static Regex otherAbsorbed = new Regex(@"", RegexOptions.Compiled);
+		static Regex otherAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) absorbs (\d+) damage of your (.)+\.", RegexOptions.Compiled);
 
 		static Regex youGainedXpEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] You gained (\d+) XP\.", RegexOptions.Compiled);
 

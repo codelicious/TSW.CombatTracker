@@ -28,7 +28,7 @@
 							  Filter="CharactersSource_Filter">
 			<CollectionViewSource.SortDescriptions>
 				<w:SortDescription Direction="Descending" PropertyName="IsYou" />
-				<w:SortDescription Direction="Descending" PropertyName="Offensive_TotalDamage" />
+				<w:SortDescription Direction="Descending" PropertyName="Offensive_DPS" />
 				<w:SortDescription Direction="Ascending" PropertyName="Name" />
 			</CollectionViewSource.SortDescriptions>
 		</CollectionViewSource>
@@ -48,6 +48,10 @@
 
 		<DataTemplate x:Key="AttackDmgPerHitCell">
 			<TextBlock Text="{Binding Path=Hits.DamagePerHit, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		</DataTemplate>
+
+		<DataTemplate x:Key="AttackDPSCell">
+			<TextBlock Text="{Binding Path=Hits.DPS, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDPMCell">
@@ -71,7 +75,8 @@
 			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
 			<GridViewColumn Header="Damage" CellTemplate="{StaticResource AttackDamageCell}" Width="65" />
 			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
-			<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />
+			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="45" />
+			<!--<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />-->
 			<GridViewColumn Header="% Crit" CellTemplate="{StaticResource AttackPercentCritCell}" Width="45" />
 			<GridViewColumn Header="% Pen" CellTemplate="{StaticResource AttackPercentPenetratedCell}" Width="45" />
 			<GridViewColumn Header="% Total" CellTemplate="{StaticResource AttackPercentTotalCell}" Width="45" />
@@ -148,8 +153,8 @@
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Text="{Binding Name}" Width="60" />
 							<TextBlock Text="{Binding Offensive_TotalDamage, StringFormat=N0}" Width="60" TextAlignment="Right" />
-							<TextBlock Text="{Binding Offensive_DPM, StringFormat=N2}" Width="60" TextAlignment="Right" />
-							<TextBlock>/min</TextBlock>
+							<TextBlock Text="{Binding Offensive_DPS, StringFormat=N2}" Width="60" TextAlignment="Right" />
+							<TextBlock>/sec</TextBlock>
 						</StackPanel>
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
@@ -189,7 +194,7 @@
 
 				<TextBlock Text="Total:" Grid.Row="0" Grid.Column="0" />
 				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPS, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 				<TextBlock Text="Hits: " Grid.Row="1" Grid.Column="0" />
 				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
@@ -292,7 +297,7 @@
 
 					<TextBlock Text="Damage:" Grid.Row="0" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DPM, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DPS, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 					<TextBlock Text="Hits:" Grid.Row="1" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />

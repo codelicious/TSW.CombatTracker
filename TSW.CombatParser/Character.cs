@@ -36,6 +36,7 @@ namespace TSW.CombatParser
 
 		// These are bogus proxy properties because SortDescription is too stupid to use property paths
 		public uint Offensive_TotalDamage { get; set; }
+		public double Offensive_DPS { get; private set; }
 		public double Offensive_DPM { get; private set; }
 
 		public bool IsYou { get; set; }
@@ -136,6 +137,7 @@ namespace TSW.CombatParser
 			OffensiveHealSummaries.Refresh();
 			foreach (HealTypeSummary summary in OffensiveHealSummaries) summary.Refresh();
 			Offensive_TotalDamage = OffensiveHits.TotalDamage;
+			Offensive_DPS = OffensiveHits.DPS;
 			Offensive_DPM = OffensiveHits.DPM;
 			
 			DefensiveHits.Refresh();
