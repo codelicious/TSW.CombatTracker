@@ -8,138 +8,241 @@ namespace TSW.CombatParser
 {
 	public class CombatParser
 	{
-		static Regex youBeganAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] You start using (.+)\.", RegexOptions.Compiled);
-		static Regex youFinishedAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] You successfully used (.+)\.", RegexOptions.Compiled);
-		static Regex otherBeganAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) starts using (.+)\.", RegexOptions.Compiled);
-		static Regex otherFinishedAttack = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) successfully used the (.+)\.", RegexOptions.Compiled);
+		#region Event-matching regular expressions
+		static Regex timestampEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.*)", RegexOptions.Compiled);
 
-		static Regex yourHitEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}Your (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
-		static Regex otherHitYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) you for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
-		static Regex otherHitOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
-		static Regex interrupedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] Interrupted!", RegexOptions.Compiled);
+		static Regex yourHitEx = new Regex(@"(?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}Your (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex otherHitYouEx = new Regex(@"(?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) you for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex otherHitOtherEx = new Regex(@"(?:\((Normal|Critical|Blocked|Penetrated)\) ){0,1}([^\']+)'s (.+) hits \((Normal|Glancing)\) (.+) for (\d+) (physical|magical) damage\. \((Normal|Critical|Blocked|Penetrated)\)", RegexOptions.Compiled);
+		static Regex interrupedEx = new Regex(@"Interrupted!", RegexOptions.Compiled);
 
-		static Regex otherEvadedYouEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) evaded your (.+)\.", RegexOptions.Compiled);
-		static Regex youEvadeOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (You) evade ([^\']+)\'s (.+)\.", RegexOptions.Compiled);
-		static Regex otherEvadedOtherEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) evaded (.+)\'s (.+)\.", RegexOptions.Compiled);
+		static Regex youHealedEx = new Regex(@"(?:\((Critical)\) ){0,1}Your (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
+		static Regex otherHealedEx = new Regex(@"(?:\((Critical)\) ){0,1}([^\']+)\'s (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
 
-		static Regex youHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}Your (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
-		static Regex otherHealedEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] (?:\((Critical)\) ){0,1}([^\']+)\'s (.+) heals (.+) for (\d+)\.", RegexOptions.Compiled);
+		static Regex someoneBeganAttack = new Regex(@"(.+) start[s]{0,1} using (.+)\.", RegexOptions.Compiled);
+		static Regex someoneFinishedAttack = new Regex(@"(.+) successfully used (?:the ){0,1}(.+)\.", RegexOptions.Compiled);
 
-		static Regex youAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
-		static Regex otherAbsorbed = new Regex(@"\[(\d\d:\d\d:\d\d)\] (.+) absorbs (\d+) damage of your (.)+\.", RegexOptions.Compiled);
+		static Regex otherEvadedYouEx = new Regex(@"(.+) evaded your (.+)\.", RegexOptions.Compiled);
+		static Regex youEvadeOtherEx = new Regex(@"(You) evade ([^\']+)\'s (.+)\.", RegexOptions.Compiled);
+		static Regex otherEvadedOtherEx = new Regex(@"(.+) evaded (.+)\'s (.+)\.", RegexOptions.Compiled);
 
-		static Regex youGainedXpEx = new Regex(@"\[(\d\d:\d\d:\d\d)\] You gained (\d+) XP\.", RegexOptions.Compiled);
+		static Regex youAbsorbed = new Regex(@"Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
+		static Regex otherAbsorbed = new Regex(@"(.+) absorbs (\d+) damage of your (.)+\.", RegexOptions.Compiled);
 
+		static Regex youGainedXpEx = new Regex(@"You gained (\d+) XP\.", RegexOptions.Compiled);
+		#endregion
 
+		public event EventHandler<AttackEventArgs> Attack;
 		public event EventHandler<HitEventArgs> Hit;
 		public event EventHandler<EvadeEventArgs> Evade;
 		public event EventHandler<HealEventArgs> Heal;
 		public event EventHandler<AbsorbEventArgs> Absorb;
 		public event EventHandler<XpEventArgs> XP;
+		public event EventHandler<SkippedEventArgs> Skipped;
 
 		public void Parse(string line)
 		{
-			Match m = yourHitEx.Match(line);
+			Match m = timestampEx.Match(line);
 			if (m.Success)
 			{
-				OnYouHitOther(m);
-				return;
+				DateTime timestamp;
+				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
+				{
+					line = m.Groups[2].Value;
+
+					m = yourHitEx.Match(line);
+					if (m.Success)
+					{
+						OnYouHitOther(timestamp, m);
+						return;
+					}
+
+					m = otherHitYouEx.Match(line);
+					if (m.Success)
+					{
+						OnOtherHitYou(timestamp, m);
+						return;
+					}
+
+					m = otherHitOtherEx.Match(line);
+					if (m.Success)
+					{
+						OnOtherHitOther(timestamp, m);
+						return;
+					}
+
+					m = youHealedEx.Match(line);
+					if (m.Success)
+					{
+						OnYouHealed(timestamp, m);
+						return;
+					}
+
+					m = otherHealedEx.Match(line);
+					if (m.Success)
+					{
+						OnOtherHealed(timestamp, m);
+						return;
+					}
+
+					m = someoneBeganAttack.Match(line);
+					if (m.Success)
+					{
+						return;
+					}
+
+					m = someoneFinishedAttack.Match(line);
+					if (m.Success)
+					{
+						return;
+					}
+
+					m = otherEvadedYouEx.Match(line);
+					if (m.Success)
+					{
+						OnOtherEvadedYou(timestamp, m);
+						return;
+					}
+
+					m = youEvadeOtherEx.Match(line);
+					if (m.Success)
+					{
+						OnYouEvadedOther(timestamp, m);
+						return;
+					}
+
+					m = otherEvadedOtherEx.Match(line);
+					if (m.Success)
+					{
+						OnOtherEvadedOther(timestamp, m);
+						return;
+					}
+
+					m = youAbsorbed.Match(line);
+					if (m.Success)
+					{
+						OnYouAbsorbed(timestamp, m);
+						return;
+					}
+
+					m = youGainedXpEx.Match(line);
+					if (m.Success)
+					{
+						OnXpGain(timestamp, m);
+						return;
+					}
+
+					m = interrupedEx.Match(line);
+					if (m.Success)
+					{
+						//OnInterrupted(timestamp, m);
+						return;
+					}
+				}
 			}
 
-			m = otherHitYouEx.Match(line);
-			if (m.Success)
-			{
-				OnOtherHitYou(m);
-				return;
-			}
-
-			m = otherHitOtherEx.Match(line);
-			if (m.Success)
-			{
-				OnOtherHitOther(m);
-				return;
-			}
-
-			m = otherEvadedYouEx.Match(line);
-			if (m.Success)
-			{
-				OnOtherEvadedYou(m);
-				return;
-			}
-
-			m = youEvadeOtherEx.Match(line);
-			if (m.Success)
-			{
-				OnYouEvadedOther(m);
-				return;
-			}
-
-			m = otherEvadedOtherEx.Match(line);
-			if (m.Success)
-			{
-				OnOtherEvadedOther(m);
-				return;
-			}
-
-			m = youHealedEx.Match(line);
-			if (m.Success)
-			{
-				OnYouHealed(m);
-				return;
-			}
-
-			m = otherHealedEx.Match(line);
-			if (m.Success)
-			{
-				OnOtherHealed(m);
-				return;
-			}
-
-			m = youAbsorbed.Match(line);
-			if (m.Success)
-			{
-				OnYouAbsorbed(m);
-				return;
-			}
-
-			m = youGainedXpEx.Match(line);
-			if (m.Success)
-			{
-				OnXpGain(m);
-				return;
-			}
-
-			m = interrupedEx.Match(line);
-			if (m.Success)
-			{
-				//OnInterrupted(m);
-				return;
-			}
+			if (Skipped != null)
+				Skipped(null, new SkippedEventArgs() { Line = line });
 		}
 
-		private void OnYouHitOther(Match m)
+		private void OnYouHitOther(DateTime timestamp, Match m)
 		{
 			if (Hit != null)
 			{
 				HitEventArgs hit = new HitEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					hit.Timestamp = timestamp;
-				else
-					hit.Timestamp = DateTime.MinValue;
-
+				hit.Timestamp = timestamp;
 				hit.Attacker = "You";
+				hit.Target = m.Groups[4].Value;
+				hit.AttackType = m.Groups[2].Value;
+				hit.Type = m.Groups[6].Value;
+				
+				uint damage;
+				if (uint.TryParse(m.Groups[5].Value, out damage))
+					hit.Damage = damage;
+				else
+					hit.Damage = 0;
+				
+				string critical = m.Groups[1].Value;
+				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
+					hit.Critical = true;
+				else
+					hit.Critical = false;
+
+				string glancing = m.Groups[3].Value;
+				if (!String.IsNullOrEmpty(glancing) && glancing.Equals("Glancing"))
+					hit.Glancing = true;
+				else
+					hit.Glancing = false;
+
+				string blocked = m.Groups[7].Value;
+				if (!String.IsNullOrEmpty(blocked))
+				{
+					hit.Blocked = blocked.Equals("Blocked");
+					hit.Penetrated = blocked.Equals("Penetrated");
+				}
+
+				Hit(null, hit);
+			}
+		}
+
+		private void OnOtherHitYou(DateTime timestamp, Match m)
+		{
+			if (Hit != null)
+			{
+				HitEventArgs hit = new HitEventArgs();
+				hit.Timestamp = timestamp;
+				hit.Attacker = m.Groups[2].Value;
+				hit.Target = "You";
+				hit.AttackType = m.Groups[3].Value;
+				hit.Type = m.Groups[6].Value;
+
+				uint damage;
+				if (uint.TryParse(m.Groups[5].Value, out damage))
+					hit.Damage = damage;
+				else
+					hit.Damage = 0;
+
+				string critical = m.Groups[1].Value;
+				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
+					hit.Critical = true;
+				else
+					hit.Critical = false;
+
+				string glancing = m.Groups[4].Value;
+				if (!String.IsNullOrEmpty(glancing) && glancing.Equals("Glancing"))
+					hit.Glancing = true;
+				else
+					hit.Glancing = false;
+
+				string blocked = m.Groups[7].Value;
+				if (!String.IsNullOrEmpty(blocked))
+				{
+					hit.Blocked = blocked.Equals("Blocked");
+					hit.Penetrated = blocked.Equals("Penetrated");
+				}
+
+				Hit(null, hit);
+			}
+		}
+
+		private void OnOtherHitOther(DateTime timestamp, Match m)
+		{
+			if (Hit != null)
+			{
+				HitEventArgs hit = new HitEventArgs();
+				hit.Timestamp = timestamp;
+				hit.Attacker = m.Groups[2].Value;
 				hit.Target = m.Groups[5].Value;
 				hit.AttackType = m.Groups[3].Value;
 				hit.Type = m.Groups[7].Value;
-				
+
 				uint damage;
 				if (uint.TryParse(m.Groups[6].Value, out damage))
 					hit.Damage = damage;
 				else
 					hit.Damage = 0;
-				
-				string critical = m.Groups[2].Value;
+
+				string critical = m.Groups[1].Value;
 				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
 					hit.Critical = true;
 				else
@@ -162,163 +265,51 @@ namespace TSW.CombatParser
 			}
 		}
 
-		private void OnOtherHitYou(Match m)
-		{
-			if (Hit != null)
-			{
-				HitEventArgs hit = new HitEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					hit.Timestamp = timestamp;
-				else
-					hit.Timestamp = DateTime.MinValue;
-
-				hit.Attacker = m.Groups[3].Value;
-				hit.Target = "You";
-				hit.AttackType = m.Groups[4].Value;
-				hit.Type = m.Groups[7].Value;
-
-				uint damage;
-				if (uint.TryParse(m.Groups[6].Value, out damage))
-					hit.Damage = damage;
-				else
-					hit.Damage = 0;
-
-				string critical = m.Groups[2].Value;
-				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
-					hit.Critical = true;
-				else
-					hit.Critical = false;
-
-				string glancing = m.Groups[5].Value;
-				if (!String.IsNullOrEmpty(glancing) && glancing.Equals("Glancing"))
-					hit.Glancing = true;
-				else
-					hit.Glancing = false;
-
-				string blocked = m.Groups[8].Value;
-				if (!String.IsNullOrEmpty(blocked))
-				{
-					hit.Blocked = blocked.Equals("Blocked");
-					hit.Penetrated = blocked.Equals("Penetrated");
-				}
-
-				Hit(null, hit);
-			}
-		}
-
-		private void OnOtherHitOther(Match m)
-		{
-			if (Hit != null)
-			{
-				HitEventArgs hit = new HitEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					hit.Timestamp = timestamp;
-				else
-					hit.Timestamp = DateTime.MinValue;
-
-				hit.Attacker = m.Groups[3].Value;
-				hit.Target = m.Groups[6].Value;
-				hit.AttackType = m.Groups[4].Value;
-				hit.Type = m.Groups[8].Value;
-
-				uint damage;
-				if (uint.TryParse(m.Groups[7].Value, out damage))
-					hit.Damage = damage;
-				else
-					hit.Damage = 0;
-
-				string critical = m.Groups[2].Value;
-				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
-					hit.Critical = true;
-				else
-					hit.Critical = false;
-
-				string glancing = m.Groups[5].Value;
-				if (!String.IsNullOrEmpty(glancing) && glancing.Equals("Glancing"))
-					hit.Glancing = true;
-				else
-					hit.Glancing = false;
-
-				string blocked = m.Groups[9].Value;
-				if (!String.IsNullOrEmpty(blocked))
-				{
-					hit.Blocked = blocked.Equals("Blocked");
-					hit.Penetrated = blocked.Equals("Penetrated");
-				}
-
-				Hit(null, hit);
-			}
-		}
-
-		void OnOtherEvadedYou(Match m)
+		void OnOtherEvadedYou(DateTime timestamp, Match m)
 		{
 			if (Evade != null)
 			{
 				EvadeEventArgs evade = new EvadeEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					evade.Timestamp = timestamp;
-				else
-					evade.Timestamp = DateTime.MinValue;
+				evade.Timestamp = timestamp;
 				evade.Attacker = "You";
-				evade.Evader = m.Groups[2].Value;
-				evade.AttackType = m.Groups[3].Value;
+				evade.Evader = m.Groups[1].Value;
+				evade.AttackType = m.Groups[2].Value;
 
 				Evade(null, evade);
 			}
 		}
 
-		void OnYouEvadedOther(Match m)
-		{
-			if (Evade != null)
-			{
-				EvadeEventArgs evade = new EvadeEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					evade.Timestamp = timestamp;
-				else
-					evade.Timestamp = DateTime.MinValue;
-				evade.Attacker = m.Groups[3].Value;
-				evade.Evader = "You";
-				evade.AttackType = m.Groups[4].Value;
-
-				Evade(null, evade);
-			}
-		}
-
-		void OnOtherEvadedOther(Match m)
-		{
-			if (Evade != null)
-			{
-				EvadeEventArgs evade = new EvadeEventArgs();
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					evade.Timestamp = timestamp;
-				else
-					evade.Timestamp = DateTime.MinValue;
-				evade.Attacker = m.Groups[3].Value;
-				evade.Evader = m.Groups[2].Value;
-				evade.AttackType = m.Groups[4].Value;
-
-				Evade(null, evade);
-			}
-		}
-
-		void OnYouHealed(Match m)
+		void OnYouHealed(DateTime timestamp, Match m)
 		{
 			if (Heal != null)
 			{
 				HealEventArgs heal = new HealEventArgs();
-				
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					heal.Timestamp = timestamp;
-				else
-					heal.Timestamp = DateTime.MinValue;
-				
+				heal.Timestamp = timestamp;
 				heal.Healer = "You";
+				heal.Target = m.Groups[3].Value;
+				heal.HealType = m.Groups[2].Value;
+
+				uint amount;
+				if (uint.TryParse(m.Groups[4].Value, out amount))
+					heal.Amount = amount;
+
+				string critical = m.Groups[1].Value;
+				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
+					heal.Critical = true;
+				else
+					heal.Critical = false;
+
+				Heal(null, heal);
+			}
+		}
+
+		void OnOtherHealed(DateTime timestamp, Match m)
+		{
+			if (Heal != null)
+			{
+				HealEventArgs heal = new HealEventArgs();
+				heal.Timestamp = timestamp;
+				heal.Healer = m.Groups[2].Value;
 				heal.Target = m.Groups[4].Value;
 				heal.HealType = m.Groups[3].Value;
 
@@ -326,7 +317,7 @@ namespace TSW.CombatParser
 				if (uint.TryParse(m.Groups[5].Value, out amount))
 					heal.Amount = amount;
 
-				string critical = m.Groups[2].Value;
+				string critical = m.Groups[1].Value;
 				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
 					heal.Critical = true;
 				else
@@ -336,54 +327,46 @@ namespace TSW.CombatParser
 			}
 		}
 
-		void OnOtherHealed(Match m)
+		void OnYouEvadedOther(DateTime timestamp, Match m)
 		{
-			if (Heal != null)
+			if (Evade != null)
 			{
-				HealEventArgs heal = new HealEventArgs();
-				
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					heal.Timestamp = timestamp;
-				else
-					heal.Timestamp = DateTime.MinValue;
+				EvadeEventArgs evade = new EvadeEventArgs();
+				evade.Timestamp = timestamp;
+				evade.Attacker = m.Groups[2].Value;
+				evade.Evader = "You";
+				evade.AttackType = m.Groups[3].Value;
 
-				heal.Healer = m.Groups[3].Value;
-				heal.Target = m.Groups[5].Value;
-				heal.HealType = m.Groups[4].Value;
-
-				uint amount;
-				if (uint.TryParse(m.Groups[6].Value, out amount))
-					heal.Amount = amount;
-
-				string critical = m.Groups[2].Value;
-				if (!String.IsNullOrEmpty(critical) && critical.Equals("Critical"))
-					heal.Critical = true;
-				else
-					heal.Critical = false;
-
-				Heal(null, heal);
+				Evade(null, evade);
 			}
 		}
 
-		void OnYouAbsorbed(Match m)
+		void OnOtherEvadedOther(DateTime timestamp, Match m)
+		{
+			if (Evade != null)
+			{
+				EvadeEventArgs evade = new EvadeEventArgs();
+				evade.Timestamp = timestamp;
+				evade.Attacker = m.Groups[2].Value;
+				evade.Evader = m.Groups[1].Value;
+				evade.AttackType = m.Groups[3].Value;
+
+				Evade(null, evade);
+			}
+		}
+
+		void OnYouAbsorbed(DateTime timestamp, Match m)
 		{
 			if (Absorb != null)
 			{
 				AbsorbEventArgs absorb = new AbsorbEventArgs();
-
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					absorb.Timestamp = timestamp;
-				else
-					absorb.Timestamp = DateTime.MinValue;
-
-				absorb.Attacker = m.Groups[4].Value;
+				absorb.Timestamp = timestamp;
+				absorb.Attacker = m.Groups[3].Value;
 				absorb.Target = "You";
-				absorb.BarrierType = m.Groups[2].Value;
+				absorb.BarrierType = m.Groups[1].Value;
 
 				uint damage;
-				if (uint.TryParse(m.Groups[3].Value, out damage))
+				if (uint.TryParse(m.Groups[2].Value, out damage))
 					absorb.Damage = damage;
 				else
 					absorb.Damage = 0;
@@ -392,25 +375,35 @@ namespace TSW.CombatParser
 			}
 		}
 
-		void OnXpGain(Match m)
+		void OnXpGain(DateTime timestamp, Match m)
 		{
 			if (XP != null)
 			{
 				XpEventArgs xp = new XpEventArgs();
+				xp.Timestamp = timestamp;
 
-				DateTime timestamp;
-				if (DateTime.TryParse(m.Groups[1].Value, out timestamp))
-					xp.Timestamp = timestamp;
-				else
-					xp.Timestamp = DateTime.MinValue;
-			
 				uint xpAmount;
-				if (uint.TryParse(m.Groups[2].Value, out xpAmount))
+				if (uint.TryParse(m.Groups[1].Value, out xpAmount))
 					xp.XP = xpAmount;
 
 				XP(null, xp);
 			}
 		}
+	}
+
+	public class AttackEventArgs : EventArgs
+	{
+		public DateTime Timestamp { get; set; }
+		public string Attacker { get; set; }
+		public string Attack { get; set; }
+		public AttackState State { get; set; }
+	}
+
+	public enum AttackState
+	{
+		Started,
+		Completed,
+		Interrupted
 	}
 
 	[System.Diagnostics.DebuggerDisplay("{Attacker,nq} hit {Target,nq} with {Attack,nq} for {Damage,nq} {Type,nq} damage")]
@@ -459,5 +452,10 @@ namespace TSW.CombatParser
 	{
 		public DateTime Timestamp { get; set; }
 		public uint XP { get; set; }
+	}
+
+	public class SkippedEventArgs : EventArgs
+	{
+		public string Line { get; set; }
 	}
 }
