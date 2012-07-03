@@ -126,6 +126,11 @@ namespace TSW.CombatTracker
 			CombatDisplay.Refresh();
 		}
 
+		private void ScriptsButton_Click(object sender, RoutedEventArgs e)
+		{
+			Scripts.GenerateScripts(Combat, Properties.Settings.Default["TSWFolder"] as String);
+		}
+
 		double normalHeight = Double.NaN;
 
 		private void MinButton_Checked(object sender, RoutedEventArgs e)

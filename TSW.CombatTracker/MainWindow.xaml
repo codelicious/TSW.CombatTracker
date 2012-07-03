@@ -13,7 +13,7 @@
 	<Window.Style>
 		<Style TargetType="Window">
 			<Style.Triggers>
-				<DataTrigger Binding="{Binding ElementName=PinButton, Path=IsChecked}" Value="False">
+				<DataTrigger Binding="{Binding ElementName=TransparentButton, Path=IsChecked}" Value="True">
 					<Setter Property="Opacity" Value="0.4" />
 				</DataTrigger>
 			</Style.Triggers>
@@ -26,7 +26,7 @@
 			<!--<Setter Property="Background" Value="{StaticResource DarkHeaderBrush}" />-->
 		</Style>
 
-		<Style x:Key="PinButtonStyle" TargetType="ToggleButton">
+		<Style x:Key="TransparentButtonStyle" TargetType="ToggleButton">
 			<Style.Triggers>
 				<Trigger Property="IsChecked" Value="False">
 					<Setter Property="Opacity" Value="0.4" />
@@ -73,10 +73,15 @@
 					<!-- TODO: Add button images -->
 				</ToggleButton>
 
-				<ToggleButton x:Name="PinButton" IsChecked="True" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
+				<ToggleButton x:Name="TransparentButton" IsChecked="False" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
 					<ToggleButton.ToolTip>Transparent</ToggleButton.ToolTip>
 					<!-- TODO: Add button images -->
 				</ToggleButton>
+
+				<Button x:Name="ScriptsButton" Command="{x:Static l:CommandActions.GenerateScripts}" Width="16" Height="16" Margin="0,4,12,4" DockPanel.Dock="Right">
+					<Button.ToolTip>Generate scripts</Button.ToolTip>
+					<!-- TODO: Add button images -->
+				</Button>
 
 				<Button x:Name="ClearButton" Click="ClearButton_Click" Width="16" Height="16" Margin="0,4,16,4" DockPanel.Dock="Right">
 					<Button.ToolTip>Clear statistics</Button.ToolTip>
