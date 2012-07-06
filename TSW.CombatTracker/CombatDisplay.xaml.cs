@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+    Copyright 2012 Douglas Harber
+
+    This file is part of TSW.CombatTracker.
+
+    TSW.CombatTracker is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    TSW.CombatTracker is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with TSW.CombatTracker.  If not, see <http://www.gnu.org/licenses/>.
+*/
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -17,56 +35,37 @@ namespace TSW.CombatTracker
 	{
 		public Combat Combat { get; set; }
 
-		private IEditableCollectionView charactersView = null;
-		private IEditableCollectionView damageDealersView = null;
-
-
 		public CombatDisplay()
 		{
 			InitializeComponent();
 		}
 
-		private void CombatDisplay_Loaded(object sender, RoutedEventArgs e)
+		public void Refresh()
 		{
+			Combat.Refresh();
+
+			CollectionViewSource source = FindResource("CharactersSource") as CollectionViewSource;
+			IEditableCollectionView view = source.View as IEditableCollectionView;
+			foreach (Character character in Combat.Characters)
+			{
+				view.EditItem(character);
+				view.CommitEdit();
+			}
 		}
 
-		private void DamageDealersSource_Filter(object sender, FilterEventArgs e)
+		public void Reset()
 		{
-			Character ch = e.Item as Character;
-			if (ch != null)
-				e.Accepted = !ch.IsMob;
+			CollectionViewSource source = FindResource("CharactersSource") as CollectionViewSource;
+			source.View.Refresh();
+		}
+
+		private void CharactersSource_Filter(object sender, FilterEventArgs e)
+		{
+			Character character = e.Item as Character;
+			if (character != null)
+				e.Accepted = !character.IsMob;
 			else
-				e.Accepted = false;
-		}
-
-		private IEditableCollectionView CharactersView
-		{
-			get
-			{
-				if (charactersView == null)
-				{
-					CollectionViewSource charactersSource = FindResource("CharactersSource") as CollectionViewSource;
-					if (charactersSource != null)
-						charactersView = charactersSource.View as IEditableCollectionView;
-				}
-
-				return charactersView;
-			}
-		}
-
-		private IEditableCollectionView DamageDealersView
-		{
-			get
-			{
-				if (damageDealersView == null)
-				{
-					CollectionViewSource damageDealersSource = FindResource("DamageDealersSource") as CollectionViewSource;
-					if (damageDealersSource != null)
-						damageDealersView = damageDealersSource.View as IEditableCollectionView;
-				}
-
-				return damageDealersView;
-			}
+				e.Accepted = true;
 		}
 	}
 }

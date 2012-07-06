@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+    Copyright 2012 Douglas Harber
+
+    This file is part of TSW.CombatTracker.
+
+    TSW.CombatTracker is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    TSW.CombatTracker is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with TSW.CombatTracker.  If not, see <http://www.gnu.org/licenses/>.
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +47,8 @@ namespace TSW.CombatParser
 		static Regex youAbsorbed = new Regex(@"Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
 		static Regex otherAbsorbed = new Regex(@"(.+) absorbs (\d+) damage of your (.)+\.", RegexOptions.Compiled);
 
+		// TODO: Add reflect expressions
+
 		static Regex youGainedXpEx = new Regex(@"You gained (\d+) XP\.", RegexOptions.Compiled);
 		#endregion
 
@@ -37,6 +57,7 @@ namespace TSW.CombatParser
 		public event EventHandler<EvadeEventArgs> Evade;
 		public event EventHandler<HealEventArgs> Heal;
 		public event EventHandler<AbsorbEventArgs> Absorb;
+		// TODO: Add reflect event
 		public event EventHandler<XpEventArgs> XP;
 		public event EventHandler<SkippedEventArgs> Skipped;
 
@@ -85,6 +106,11 @@ namespace TSW.CombatParser
 						return;
 					}
 
+					// TODO: Handle start and end of attack
+					// N.B. It turns out there may be no good reason to do this. There appears to be no
+					// synchronization between attack "boundaries", i.e., starting and completing an attack,
+					// and the damage that actually occurs, especially for secondary procs.
+#if FALSE
 					m = someoneBeganAttack.Match(line);
 					if (m.Success)
 					{
@@ -96,7 +122,7 @@ namespace TSW.CombatParser
 					{
 						return;
 					}
-
+#endif
 					m = otherEvadedYouEx.Match(line);
 					if (m.Success)
 					{
@@ -124,6 +150,15 @@ namespace TSW.CombatParser
 						OnYouAbsorbed(timestamp, m);
 						return;
 					}
+
+					m = otherAbsorbed.Match(line);
+					if (m.Success)
+					{
+						OnOtherAbsorbed(timestamp, m);
+						return;
+					}
+
+					// TODO: Add reflect parsing
 
 					m = youGainedXpEx.Match(line);
 					if (m.Success)
@@ -364,6 +399,28 @@ namespace TSW.CombatParser
 				absorb.Attacker = m.Groups[3].Value;
 				absorb.Target = "You";
 				absorb.BarrierType = m.Groups[1].Value;
+
+				uint damage;
+				if (uint.TryParse(m.Groups[2].Value, out damage))
+					absorb.Damage = damage;
+				else
+					absorb.Damage = 0;
+
+				Absorb(null, absorb);
+			}
+		}
+
+		void OnOtherAbsorbed(DateTime timestamp, Match m)
+		{
+			// "(.+) absorbs (\d+) damage of your (.)+\."
+
+			if (Absorb != null)
+			{
+				AbsorbEventArgs absorb = new AbsorbEventArgs();
+				absorb.Timestamp = timestamp;
+				absorb.Attacker = "You";
+				absorb.Target = m.Groups[1].Value;
+				absorb.BarrierType = m.Groups[3].Value;
 
 				uint damage;
 				if (uint.TryParse(m.Groups[2].Value, out damage))

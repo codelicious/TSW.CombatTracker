@@ -63,23 +63,13 @@
     <Compile Include="AsyncFileReader.cs" />
     <Compile Include="ClippingBorder.cs" />
     <Compile Include="Commands.cs" />
-    <Compile Include="Converters.cs" />
-    <Compile Include="CombatDisplay2.xaml.cs">
-      <DependentUpon>CombatDisplay2.xaml</DependentUpon>
+    <Compile Include="CombatDisplay.xaml.cs">
+      <DependentUpon>CombatDisplay.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="FlowDocuments\Attached.cs" />
-    <Compile Include="FlowDocuments\BindableRun.cs" />
-    <Compile Include="FlowDocuments\BlockTemplateContent.cs" />
-    <Compile Include="FlowDocuments\Fragment.cs" />
-    <Compile Include="FlowDocuments\Helpers.cs" />
-    <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FolderDialog.cs" />
-    <Compile Include="GridSort.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MouseWheel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,6 +87,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -117,15 +108,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Assets\BrushResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Assets\ControlResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CombatDisplay2.xaml">
+    <Page Include="CombatDisplay.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -137,8 +120,8 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(SolutionDir)MouseWheelHook\$(ConfigurationName)\MouseWheelHook.dll"
-copy "$(SolutionDir)MouseWheelHook\$(ConfigurationName)\MouseWheelHook.pdb"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
