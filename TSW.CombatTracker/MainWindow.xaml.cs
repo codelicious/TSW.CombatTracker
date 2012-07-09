@@ -253,7 +253,7 @@ namespace TSW.CombatTracker
 			}
 		}
 
-		#region INotifyPropertyChanged region
+		#region INotifyPropertyChanged implementation
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		private void OnPropertyChanged(string propertyName)
