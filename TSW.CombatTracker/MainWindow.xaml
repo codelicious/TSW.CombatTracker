@@ -51,7 +51,7 @@
 				</Trigger>
 			</Style.Triggers>
 		</Style>
-		
+
 		<Style x:Key="ContentPanelStyle" TargetType="Grid">
 		</Style>
 
@@ -70,55 +70,53 @@
 						Executed="GenerateScriptsHandler" />
 	</Window.CommandBindings>
 
-	<l:ClippingBorder BorderBrush="Black" BorderThickness="1" CornerRadius="8">
-		<Grid Background="Transparent">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-			</Grid.RowDefinitions>
+	<Grid x:Name="AppPanel" Background="Black" LayoutUpdated="AppPanel_LayoutUpdated">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
 
-			<!-- Title bar -->
-			<DockPanel Background="{StaticResource DarkHeaderBrush}" LastChildFill="False" Grid.Row="0">
-				<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Padding="4" DockPanel.Dock="Left" />
-				<TextBlock Text="{Binding Path=CombatLog.Name, StringFormat=- {0}}" Padding="0,4,4,4" />
+		<!-- Title bar -->
+		<DockPanel Background="{StaticResource DarkHeaderBrush}" LastChildFill="False" Grid.Row="0">
+			<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Padding="4" DockPanel.Dock="Left" />
+			<TextBlock Text="{Binding Path=CombatLog.Name, StringFormat=- {0}}" Padding="0,4,4,4" />
 
-				<Button x:Name="CloseButton" Command="ApplicationCommands.Close" Width="16" Height="16" Margin="0,4,8,4" DockPanel.Dock="Right">
-					<Button.ToolTip>Close</Button.ToolTip>
-					<!-- TODO: Add button images -->
-				</Button>
+			<Button x:Name="CloseButton" Command="ApplicationCommands.Close" Width="16" Height="16" Margin="0,4,8,4" DockPanel.Dock="Right">
+				<Button.ToolTip>Close</Button.ToolTip>
+				<!-- TODO: Add button images -->
+			</Button>
 
-				<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right"
+			<ToggleButton x:Name="MinButton" Width="16" Height="16" Margin="0,4,4,4" DockPanel.Dock="Right"
 							  Checked="MinButton_Checked" Unchecked="MinButton_Unchecked">
-					<ToggleButton.ToolTip>Minimize</ToggleButton.ToolTip>
-					<!-- TODO: Add button images -->
-				</ToggleButton>
+				<ToggleButton.ToolTip>Minimize</ToggleButton.ToolTip>
+				<!-- TODO: Add button images -->
+			</ToggleButton>
 
-				<ToggleButton x:Name="TransparentButton" IsChecked="False" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
-					<ToggleButton.ToolTip>Transparent</ToggleButton.ToolTip>
-					<!-- TODO: Add button images -->
-				</ToggleButton>
+			<ToggleButton x:Name="TransparentButton" IsChecked="False" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
+				<ToggleButton.ToolTip>Transparent</ToggleButton.ToolTip>
+				<!-- TODO: Add button images -->
+			</ToggleButton>
 
-				<Button x:Name="ScriptsButton" Command="{x:Static l:CommandActions.GenerateScripts}" Width="16" Height="16" Margin="0,4,12,4" DockPanel.Dock="Right">
-					<Button.ToolTip>Generate scripts</Button.ToolTip>
-					<!-- TODO: Add button images -->
-				</Button>
+			<Button x:Name="ScriptsButton" Command="{x:Static l:CommandActions.GenerateScripts}" Width="16" Height="16" Margin="0,4,12,4" DockPanel.Dock="Right">
+				<Button.ToolTip>Generate scripts</Button.ToolTip>
+				<!-- TODO: Add button images -->
+			</Button>
 
-				<Button x:Name="ClearButton" Click="ClearButton_Click" Width="16" Height="16" Margin="0,4,16,4" DockPanel.Dock="Right">
-					<Button.ToolTip>Clear statistics</Button.ToolTip>
-					<!-- TODO: Add button images -->
-				</Button>
+			<Button x:Name="ClearButton" Click="ClearButton_Click" Width="16" Height="16" Margin="0,4,16,4" DockPanel.Dock="Right">
+				<Button.ToolTip>Clear statistics</Button.ToolTip>
+				<!-- TODO: Add button images -->
+			</Button>
 
-				<ToggleButton x:Name="RunButton" Checked="RunButton_Checked" Unchecked="RunButton_Unchecked" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
-					<ToggleButton.ToolTip>Process combat log</ToggleButton.ToolTip>
-					<!-- TODO: Add button images -->
-				</ToggleButton>
+			<ToggleButton x:Name="RunButton" Checked="RunButton_Checked" Unchecked="RunButton_Unchecked" Width="16" Height="16" Margin="4,4,4,4" DockPanel.Dock="Right">
+				<ToggleButton.ToolTip>Process combat log</ToggleButton.ToolTip>
+				<!-- TODO: Add button images -->
+			</ToggleButton>
 
-			</DockPanel>
+		</DockPanel>
 
-			<Grid Name="ContentPanel" Style="{StaticResource ContentPanelStyle}" Grid.Row="1">
-				<l:CombatDisplay x:Name="CombatDisplay" DataContext="{Binding Combat}" Background="{StaticResource LightContentBrush}" />
-			</Grid>
-
+		<Grid Name="ContentPanel" Style="{StaticResource ContentPanelStyle}" Grid.Row="1">
+			<l:CombatDisplay x:Name="CombatDisplay" DataContext="{Binding Combat}" Background="{StaticResource LightContentBrush}" />
 		</Grid>
-	</l:ClippingBorder>
+
+	</Grid>
 </Window>

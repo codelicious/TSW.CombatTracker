@@ -24,6 +24,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using TSW.CombatParser;
 
 namespace TSW.CombatTracker
@@ -107,6 +108,11 @@ namespace TSW.CombatTracker
 				ContentPanel.Visibility = Visibility.Collapsed;
 				Height = Double.NaN;
 			}
+		}
+
+		private void AppPanel_LayoutUpdated(object sender, EventArgs e)
+		{
+			AppPanel.Clip = new RectangleGeometry(new Rect(AppPanel.RenderSize), 6.0, 6.0);
 		}
 
 		private void RunButton_Checked(object sender, RoutedEventArgs e)
