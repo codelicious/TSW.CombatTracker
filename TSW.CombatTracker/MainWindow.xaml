@@ -21,7 +21,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:l="clr-namespace:TSW.CombatTracker;assembly="
 		xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
-		Title="TSW Damage Tracker"
+		Title="TSW Combat Tracker"
 		Foreground="White" Background="Transparent"
 		Left="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowLeft, Mode=TwoWay}"
 		Top="{Binding Source={x:Static l:Properties.Settings.Default}, Path=MainWindowTop, Mode=TwoWay}"
@@ -78,7 +78,11 @@
 
 		<!-- Title bar -->
 		<DockPanel Background="{StaticResource DarkHeaderBrush}" LastChildFill="False" Grid.Row="0">
-			<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Padding="4" DockPanel.Dock="Left" />
+			<TextBlock Text="{Binding Title, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" Padding="4" DockPanel.Dock="Left">
+				<TextBlock.ToolTip>
+					<TextBlock>Copyright 2012 Doug Harber (dharber+tsw@pobox.com)</TextBlock>
+				</TextBlock.ToolTip>
+			</TextBlock>
 			<TextBlock Text="{Binding Path=CombatLog.Name, StringFormat=- {0}}" Padding="0,4,4,4" />
 
 			<Button x:Name="CloseButton" Command="ApplicationCommands.Close" Width="16" Height="16" Margin="0,4,8,4" DockPanel.Dock="Right">
@@ -97,10 +101,10 @@
 				<!-- TODO: Add button images -->
 			</ToggleButton>
 
-			<Button x:Name="ScriptsButton" Command="{x:Static l:CommandActions.GenerateScripts}" Width="16" Height="16" Margin="0,4,12,4" DockPanel.Dock="Right">
+			<!-- Removed Script button for now since script generation is pretty weak -->
+			<!--<Button x:Name="ScriptsButton" Command="{x:Static l:CommandActions.GenerateScripts}" Width="16" Height="16" Margin="0,4,12,4" DockPanel.Dock="Right">
 				<Button.ToolTip>Generate scripts</Button.ToolTip>
-				<!-- TODO: Add button images -->
-			</Button>
+			</Button>-->
 
 			<Button x:Name="ClearButton" Click="ClearButton_Click" Width="16" Height="16" Margin="0,4,16,4" DockPanel.Dock="Right">
 				<Button.ToolTip>Clear statistics</Button.ToolTip>

@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -38,7 +39,11 @@ namespace TSW.CombatTracker
 		{
 			InitializeComponent();
 
-			VerifyLogFolder();
+			if (!VerifyLogFolder())
+			{
+				Close();
+				return;
+			}
 
 			MouseDown += delegate(object sender, MouseButtonEventArgs e)
 			{
@@ -48,6 +53,12 @@ namespace TSW.CombatTracker
 					Properties.Settings.Default.Save();
 				}
 			};
+
+			Version version = Assembly.GetExecutingAssembly().GetName().Version;
+			if (version != null)
+			{
+				Title += String.Format(" v{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+			}
 
 			IsPinned = false;
 			IsMinimized = false;
@@ -235,7 +246,7 @@ namespace TSW.CombatTracker
 			CombatDisplay.Reset();
 		}
 
-		private void VerifyLogFolder()
+		private bool VerifyLogFolder()
 		{
 			string TSWFolder = Properties.Settings.Default["TSWFolder"] as string;
 			if (String.IsNullOrEmpty(TSWFolder) || !Directory.Exists(TSWFolder))
@@ -249,8 +260,12 @@ namespace TSW.CombatTracker
 					Properties.Settings.Default.Save();
 				}
 				else
-					Application.Current.Shutdown();
+				{
+					return false;
+				}
 			}
+
+			return true;
 		}
 
 		#region INotifyPropertyChanged implementation
