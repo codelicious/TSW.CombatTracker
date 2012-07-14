@@ -38,8 +38,7 @@ TSW.CombatTracker has a very minimal interface. There are five buttons on the ri
 - Minimize
 - Close
 
-Process combat logs
--------------------
+### Process combat logs
 
 The "Process combat logs" button toggles the actual running of the combat tracker. Clicking on the button causes several things to happen:
 
@@ -51,25 +50,21 @@ Clicking the "Process combat logs" button a second time terminates monitoring of
 
 Clicking the "Process combat logs" button while holding the Control key, will bring up a file selection dialog and allow you to load a specific combat log. The entire log will be read in and the statistics displayed for that file. In this case, TSW.CombatTracker will not monitor the log for further changes since there won't be any changes in older files. It will also not monitor for new combat logs until you click "Process combat logs" again to start processing the default combat log.
 
-Clear statistics
-----------------
+### Clear statistics
 
 Pressing the "Clear statistics" button will zero out any damage or healing given or received for all players and NPC's. This provides a convenient way to start logging fresh damage numbers for a new encounter.
 
-Transparent
------------
+### Transparent
 
 The "Transparent" button will make the entire TSW.CombatTracker screen transparent so that the game screen can still be seen while the parser is active.
 
-Minimize
---------
+### Minimize
 
 The "Minimize" button will cause the TSW.CombatTracker window to shrink down to its title bar so it consumes the minimum space on the screen while playing. Hovering the mouse over the title bar will temporarily expand the window again without deactivating the game. This provides a convenient way to quickly inspect updated damage numbers without interfering with game play.
 
 The window can be permanently brought back to full size by pressing the "Minimze" button again.
 
-Close
------
+### Close
 
 The "Close" button exits the application.
 
