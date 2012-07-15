@@ -1,9 +1,9 @@
 TSW Damage Parser
 -----------------
 
-[TSW.CombatTracker 1.0.0 - Installer][dl] (664 KB) - 14 Jul 2012
+[TSW.CombatTracker 1.0.0 - Installer][dl] (665 KB) - 14 Jul 2012
 
-[dl]: https://github.com/downloads/codemonger2/TSW.CombatTracker/TSW.CombatTracker.msi
+[dl]: https://github.com/downloads/codelicious/TSW.CombatTracker/TSW.CombatTracker.msi
 
 Requirements and Installation
 -----------------------------
