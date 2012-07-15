@@ -1,4 +1,4 @@
-﻿/*
+/*
     Copyright 2012 Douglas Harber
 
     This file is part of TSW.CombatTracker.
@@ -113,23 +113,12 @@ namespace TSW.CombatTracker
 		public uint pid;
 	}
 
-	[ComImport, Guid("b4db1657-70d7-485e-8e3e-6fcb5a5c1802"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-	internal interface IModalWindow
-	{
-		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
-		int Show([In] IntPtr parent);
-	}
-
 	[ComImport, Guid("42f85136-db7e-439c-85f1-e4075d135fc8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	interface IFileDialog
 	{
-		// Defined on IModalWindow - repeated here due to requirements of COM interop layer
-		// --------------------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
 		int Show([In] IntPtr parent);
 
-		// IFileDialog-Specific interface members
-		// --------------------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void SetFileTypes([In] uint cFileTypes,
 				  [In, MarshalAs(UnmanagedType.LPArray)] COMDLG_FILTERSPEC[] rgFilterSpec);
@@ -197,7 +186,6 @@ namespace TSW.CombatTracker
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void ClearClientData();
 
-		// Not supported:  IShellItemFilter is not defined, converting to IntPtr
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void SetFilter([MarshalAs(UnmanagedType.Interface)] IntPtr pFilter);
 	}
@@ -205,12 +193,9 @@ namespace TSW.CombatTracker
 	[ComImport, Guid("d57c7288-d4ad-4768-be02-9d969532d960"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	interface IFileOpenDialog
 	{
-		// Defined on IModalWindow - repeated here due to requirements of COM interop layer
-		// --------------------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
 		int Show([In] IntPtr parent);
 
-		// Defined on IFileDialog - repeated here due to requirements of COM interop layer
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void SetFileTypes([In] uint cFileTypes, [In] COMDLG_FILTERSPEC[] rgFilterSpec);
 
@@ -277,12 +262,9 @@ namespace TSW.CombatTracker
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void ClearClientData();
 
-		// Not supported:  IShellItemFilter is not defined, converting to IntPtr
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void SetFilter([MarshalAs(UnmanagedType.Interface)] IntPtr pFilter);
 
-		// Defined by IFileOpenDialog
-		// ---------------------------------------------------------------------------------
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void GetResults([MarshalAs(UnmanagedType.Interface)] out IShellItemArray ppenum);
 
@@ -293,10 +275,6 @@ namespace TSW.CombatTracker
 	[ComImport, Guid("973510DB-7D7F-452B-8975-74A85828D354"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	interface IFileDialogEvents
 	{
-		// NOTE: some of these callbacks are cancelable - returning S_FALSE means that 
-		// the dialog should not proceed (e.g. with closing, changing folder); to 
-		// support this, we need to use the PreserveSig attribute to enable us to return
-		// the proper HRESULT
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
 		HRESULT OnFileOk([In, MarshalAs(UnmanagedType.Interface)] IFileDialog pfd);
 
@@ -336,7 +314,6 @@ namespace TSW.CombatTracker
 
 		void GetParent(out IShellItem ppsi);
 
-		//void GetDisplayName(SIGDN sigdnName, out IntPtr ppszName);
 		void GetDisplayName(SIGDN sigdnName, [Out, MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
 
 		void GetAttributes(uint sfgaoMask, out uint psfgaoAttribs);
@@ -347,7 +324,6 @@ namespace TSW.CombatTracker
 	[ComImport, Guid("B63EA76D-1F85-456F-A19C-48159EFA858B"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
 	interface IShellItemArray
 	{
-		// Not supported: IBindCtx
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void BindToHandler([In, MarshalAs(UnmanagedType.Interface)] IntPtr pbc, [In] ref Guid rbhid,
 				[In] ref Guid riid, out IntPtr ppvOut);
@@ -367,7 +343,6 @@ namespace TSW.CombatTracker
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void GetItemAt([In] uint dwIndex, [MarshalAs(UnmanagedType.Interface)] out IShellItem ppsi);
 
-		// Not supported: IEnumShellItems (will use GetCount and GetItemAt instead)
 		[MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
 		void EnumItems([MarshalAs(UnmanagedType.Interface)] out IntPtr ppenumShellItems);
 	}
