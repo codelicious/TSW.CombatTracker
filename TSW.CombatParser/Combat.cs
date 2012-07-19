@@ -162,11 +162,6 @@ namespace TSW.CombatParser
 			return character;
 		}
 
-		public void Test()
-		{
-			Characters.ToList().ForEach(c => c.AddOffensiveHit(new Attack(new HitEventArgs() { Attacker = "Big Mob", AttackType = "attack", Target = "You", Damage = 13, Type = "physical", Timestamp = DateTime.Now })));
-		}
-
 		public void Refresh()
 		{
 			Characters.ToList().ForEach(c => c.Refresh());
