@@ -1,7 +1,7 @@
 TSW Damage Parser
 -----------------
 
-[TSW.CombatTracker 1.0.0 - Installer][dl] (665 KB) - 14 Jul 2012
+[TSW.CombatTracker 1.0.0 - Installer][dl] (677 KB) - 19 Jul 2012
 
 [dl]: https://github.com/downloads/codelicious/TSW.CombatTracker/TSW.CombatTracker.msi
 
@@ -67,3 +67,7 @@ The window can be permanently brought back to full size by pressing the "Minimze
 The "Close" button exits the application.
 
 
+Known Issues
+------------
+
+Absorb and reflect damage are not being calculated or displayed.
