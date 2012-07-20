@@ -71,3 +71,5 @@ Known Issues
 ------------
 
 Absorb and reflect damage are not being calculated or displayed.
+
+Heal % of total isn't actually calculated, even though there is a field for it.
