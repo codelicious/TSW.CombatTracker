@@ -18,59 +18,87 @@
 */
 using System;
 using System.IO;
-using System.Reactive.Concurrency;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using System.Threading;
 
 namespace TSW.CombatTracker
 {
-	public class AsyncFileReader
+	public class AsyncFileReader : IDisposable
 	{
-		StreamReader reader;
-		IDisposable asyncReader;
-		Subject<string> subject;
-		Subject<long> update;
+		StreamReader reader = null;
+		Timer asyncReadTimer = null;
 
 		public AsyncFileReader()
 		{
-			subject = new Subject<string>();
-			update = new Subject<long>();
 		}
 
-		public Subject<string> Subject { get { return subject; } }
+		public event EventHandler<LineEventArgs> Line;
 
-		public Subject<long> Update { get { return update; } }
+		public event EventHandler<EventArgs> Update;
 
 		public void Read(FileStream fileStream)
 		{
-			if (asyncReader != null)
+			if (reader != null)
 				throw new Exception("AsyncFileReader is already running");
 
 			reader = new StreamReader(fileStream);
 
-			asyncReader = Observable.Interval(TimeSpan.FromSeconds(1.0)).ObserveOn(Scheduler.CurrentThread).Subscribe(i =>
-			{
-				string line;
-				bool readLines = false;
-
-				while ((line = reader.ReadLine()) != null)
+			asyncReadTimer = new Timer(o =>
 				{
-					subject.OnNext(line);
-					// It would be really nice if there was a way to know if the line actually caused something to update.
-					// I'll just have to settle for assuming that if any lines were read, there was probably at least one
-					// damage or heal update.
-					readLines = true;
-				}
+					string line;
+					bool readLines = false;
 
-				if (readLines)
-					update.OnNext(i);
-			});
+					while ((line = reader.ReadLine()) != null)
+					{
+						OnLine(line);
+						// It would be really nice if there was a way to know if the line actually caused something to update.
+						// I'll just have to settle for assuming that if any lines were read, there was probably at least one
+						// damage or heal update.
+						readLines = true;
+					}
+
+					if (readLines)
+						OnUpdate();
+
+
+					asyncReadTimer.Change(1000, Timeout.Infinite);
+				});
+
+			// Start the first read
+			asyncReadTimer.Change(0, Timeout.Infinite);
 		}
 
 		public void Close()
 		{
-			asyncReader.Dispose();
+			if (asyncReadTimer != null)
+			{
+				asyncReadTimer.Change(Timeout.Infinite, Timeout.Infinite);
+				asyncReadTimer.Dispose();
+				asyncReadTimer = null;
+			};
+
 			reader.Close();
 		}
+
+		public void Dispose()
+		{
+			Close();
+		}
+
+		private void OnLine(string line)
+		{
+			if (Line != null)
+				Line(this, new LineEventArgs() { Line = line });
+		}
+
+		private void OnUpdate()
+		{
+			if (Update != null)
+				Update(this, EventArgs.Empty);
+		}
+	}
+
+	public class LineEventArgs : EventArgs
+	{
+		public string Line { get; set; }
 	}
 }

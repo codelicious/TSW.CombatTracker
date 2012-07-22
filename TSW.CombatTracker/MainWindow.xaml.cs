@@ -20,8 +20,6 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
@@ -70,14 +68,11 @@ namespace TSW.CombatTracker
 			DirectoryInfo tswFolder = new DirectoryInfo(Properties.Settings.Default["TSWFolder"] as String);
 
 			fileWatcher = new FileSystemWatcher(tswFolder.FullName, "Combat*.txt");
-
-			logWatcher = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>(
-				h => fileWatcher.Created += h,
-				h => fileWatcher.Deleted -= h).ObserveOnDispatcher().Subscribe(e =>
+			fileWatcher.Created += (s, e) =>
 				{
 					Reset();
-					ProcessLog(new FileInfo(e.EventArgs.FullPath), true);
-				});
+					ProcessLog(new FileInfo(e.FullPath), true);
+				};
 		}
 
 		public Combat Combat { get { return combatParser; } }
@@ -94,13 +89,7 @@ namespace TSW.CombatTracker
 
 		private AsyncFileReader logReader = null;
 
-		private IDisposable logSubject = null;
-
 		private FileSystemWatcher fileWatcher = null;
-
-		private IDisposable logWatcher = null;
-
-		private IDisposable combatDisplayUpdater = null;
 
 		protected override void OnMouseEnter(MouseEventArgs e)
 		{
@@ -204,36 +193,29 @@ namespace TSW.CombatTracker
 			OnPropertyChanged("CombatLog");
 
 			logReader = new AsyncFileReader();
-			logSubject = logReader.Subject.ObserveOnDispatcher().Subscribe((line) =>
-			{
-				combatParser.ProcessLine(line);
-			});
-
-			combatDisplayUpdater = logReader.Update.ObserveOnDispatcher().Subscribe((b) =>
-			{
-				CombatDisplay.Refresh();
-			});
+			logReader.Line += logReader_Line;
+			logReader.Update += logReader_Update;
 
 			FileStream combatStream = File.Open(combatLog.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			logReader.Read(combatStream);
 		}
 
+		private void logReader_Line(object sender, LineEventArgs e)
+		{
+			combatParser.ProcessLine(e.Line);
+		}
+
+		private void logReader_Update(object sender, EventArgs e)
+		{
+			CombatDisplay.Refresh();
+		}
+
 		public void Reset()
 		{
-			if (combatDisplayUpdater != null)
-			{
-				combatDisplayUpdater.Dispose();
-				combatDisplayUpdater = null;
-			}
-
-			if (logSubject != null)
-			{
-				logSubject.Dispose();
-				logSubject = null;
-			}
-
 			if (logReader != null)
 			{
+				logReader.Line -= logReader_Line;
+				logReader.Update -= logReader_Update;
 				logReader.Close();
 				logReader = null;
 			}

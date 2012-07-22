@@ -21,26 +21,14 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_4A961F02721EAFC0FA1A4BE206D78544"
+        "OwnerKey" = "8:_D41934DDAAA744878C9AE7DDB3A5E623"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5884C656EC8B407EA2913E3B153A2570"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6D2CDE66CFBBD066A9A6739AC92C5022"
-        "OwnerKey" = "8:_D41934DDAAA744878C9AE7DDB3A5E623"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6D2CDE66CFBBD066A9A6739AC92C5022"
-        "OwnerKey" = "8:_9690C9D44E35D5D9D9596FF66BD81309"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9690C9D44E35D5D9D9596FF66BD81309"
-        "OwnerKey" = "8:_D41934DDAAA744878C9AE7DDB3A5E623"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -51,12 +39,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EE07D7A1A62A29DFBB92F591AEF71190"
-        "OwnerKey" = "8:_D41934DDAAA744878C9AE7DDB3A5E623"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D41934DDAAA744878C9AE7DDB3A5E623"
         "MsmSig" = "8:_UNDEFINED"
@@ -64,19 +46,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_EE07D7A1A62A29DFBB92F591AEF71190"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9690C9D44E35D5D9D9596FF66BD81309"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6D2CDE66CFBBD066A9A6739AC92C5022"
+        "OwnerKey" = "8:_4A961F02721EAFC0FA1A4BE206D78544"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -204,96 +174,14 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5884C656EC8B407EA2913E3B153A2570"
-            {
-            "SourcePath" = "8:..\\LICENSE"
-            "TargetName" = "8:LICENSE"
-            "Tag" = "8:"
-            "Folder" = "8:_D50331B5A915430B844D845AE3793595"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6D2CDE66CFBBD066A9A6739AC92C5022"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_6D2CDE66CFBBD066A9A6739AC92C5022"
-                    {
-                    "Name" = "8:System.Reactive.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Reactive.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D50331B5A915430B844D845AE3793595"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9690C9D44E35D5D9D9596FF66BD81309"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Reactive.Windows.Threading, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_9690C9D44E35D5D9D9596FF66BD81309"
-                    {
-                    "Name" = "8:System.Reactive.Windows.Threading.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:System.Reactive.Windows.Threading.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_D50331B5A915430B844D845AE3793595"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EE07D7A1A62A29DFBB92F591AEF71190"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4A961F02721EAFC0FA1A4BE206D78544"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:TSW.CombatParser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_EE07D7A1A62A29DFBB92F591AEF71190"
+                    "_4A961F02721EAFC0FA1A4BE206D78544"
                     {
                     "Name" = "8:TSW.CombatParser.dll"
                     "Attributes" = "3:512"
@@ -315,6 +203,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5884C656EC8B407EA2913E3B153A2570"
+            {
+            "SourcePath" = "8:..\\LICENSE"
+            "TargetName" = "8:LICENSE"
+            "Tag" = "8:"
+            "Folder" = "8:_D50331B5A915430B844D845AE3793595"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -385,7 +293,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:TSW.CombatTracker"
         "ProductCode" = "8:{97F11974-C5D6-458E-8F9C-BB28AED8AB48}"
-        "PackageCode" = "8:{D42EA057-A284-41BC-856A-3E934F2E5CE1}"
+        "PackageCode" = "8:{61558008-9023-4CB8-A982-746BF1718786}"
         "UpgradeCode" = "8:{6383C684-5026-4CA7-B401-8EAD72EAD0E4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1018,7 +926,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_D41934DDAAA744878C9AE7DDB3A5E623"
             {
-            "SourcePath" = "8:..\\TSW.CombatTracker\\obj\\x86\\Release\\TSW.CombatTracker.exe"
+            "SourcePath" = "8:..\\TSW.CombatTracker\\obj\\x86\\Debug\\TSW.CombatTracker.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_D50331B5A915430B844D845AE3793595"
