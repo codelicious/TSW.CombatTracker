@@ -1,7 +1,7 @@
 TSW Damage Parser
 -----------------
 
-[TSW.CombatTracker 1.0.0 - Installer][dl] (677 KB) - 19 Jul 2012
+[TSW.CombatTracker 1.0.0 - Installer][dl] (750 KB) - 27 Jul 2012
 
 [dl]: https://github.com/downloads/codelicious/TSW.CombatTracker/TSW.CombatTracker.msi
 
@@ -69,6 +69,8 @@ The "Close" button exits the application.
 
 Known Issues
 ------------
+
+Damage numbers aren't encounter-based so there is some inconsistency in DPS between individual attack types. This is because DPS is calculated over the seconds from the first time of a particular attack to the last time of that attack.
 
 Absorb and reflect damage are not being calculated or displayed.
 
