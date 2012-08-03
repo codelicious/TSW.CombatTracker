@@ -70,8 +70,12 @@ namespace TSW.CombatTracker
 			fileWatcher = new FileSystemWatcher(tswFolder.FullName, "Combat*.txt");
 			fileWatcher.Created += (s, e) =>
 				{
-					Reset();
-					ProcessLog(new FileInfo(e.FullPath), true);
+					Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+						{
+							Reset();
+							ProcessLog(new FileInfo(e.FullPath), true);
+						}),
+						null);
 				};
 		}
 

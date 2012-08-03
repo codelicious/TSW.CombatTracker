@@ -19,6 +19,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using System.Windows;
 
 namespace TSW.CombatTracker
 {
@@ -59,7 +60,6 @@ namespace TSW.CombatTracker
 					if (readLines)
 						OnUpdate();
 
-
 					asyncReadTimer.Change(1000, Timeout.Infinite);
 				});
 
@@ -87,13 +87,21 @@ namespace TSW.CombatTracker
 		private void OnLine(string line)
 		{
 			if (Line != null)
-				Line(this, new LineEventArgs() { Line = line });
+			{
+				Application.Current.Dispatcher.BeginInvoke(
+					new Action(() => Line(this, new LineEventArgs() { Line = line })),
+					null);
+			}
 		}
 
 		private void OnUpdate()
 		{
 			if (Update != null)
-				Update(this, EventArgs.Empty);
+			{
+				Application.Current.Dispatcher.BeginInvoke(
+					new Action(() => Update(this, EventArgs.Empty)),
+					null);
+			}
 		}
 	}
 

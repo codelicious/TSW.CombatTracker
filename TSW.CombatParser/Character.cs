@@ -162,6 +162,7 @@ namespace TSW.CombatParser
 			DefensiveHeals.Refresh();
 			DefensiveAttackSummaries.Refresh();
 			foreach (AttackTypeSummary summary in DefensiveAttackSummaries) summary.Refresh();
+			
 			DefensiveHealSummaries.Refresh();
 			foreach (HealTypeSummary summary in DefensiveHealSummaries) summary.Refresh();
 		}
