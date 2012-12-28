@@ -54,14 +54,45 @@ namespace TSW.CombatParser
 		public uint TotalCritHealth { get; private set; }
 
 		public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
-		public double HealthPerMinute { get { return GetRecentHealing(300.0); } }
+		public double HealthPerSecond
+		{
+			get
+			{
+				TimeSpan interval;
+				double health = GetRecentHealing(300.0, out interval);
+				return health / interval.TotalSeconds;
+			}
+		}
+
 		public double CritPercent { get { return (double)TotalCrits / TotalHeals * 100.0; } }
 		public double CritHealPercent { get { return (double)TotalCritHealth / TotalHealth * 100.0; } }
 
-		private double GetRecentHealing(double seconds)
+		private double GetRecentHealing(double seconds, out TimeSpan actualInterval)
 		{
 			double recentHealing = 0.0;
+			DateTime latestTime = DateTime.MinValue;
+			TimeSpan healingInterval = TimeSpan.MinValue;
 
+			int n = heals.Count;
+
+			while (--n >= 0)
+			{
+				Heal heal = heals[n];
+				if (latestTime == DateTime.MinValue)
+					latestTime = heal.Timestamp;
+
+				TimeSpan interval = latestTime - heal.Timestamp;
+				if (interval.TotalSeconds >= seconds)
+					break;
+
+				recentHealing += heal.Amount;
+				healingInterval = interval;
+			}
+
+			if (healingInterval.TotalSeconds >= 1.0)
+				actualInterval = healingInterval;
+			else
+				actualInterval = TimeSpan.FromSeconds(1.0);
 
 			return recentHealing;
 		}

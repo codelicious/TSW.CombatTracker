@@ -24,6 +24,7 @@ using System.Text;
 
 namespace TSW.CombatParser
 {
+	[System.Diagnostics.DebuggerDisplay("{Name} [{DamageType}]")]
 	public class AttackTypeSummary : INotifyPropertyChanged
 	{
 		public AttackTypeSummary(AttackCollection owner, string name, string type)
