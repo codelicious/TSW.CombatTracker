@@ -55,7 +55,7 @@ namespace TSW.CombatTracker
 			Version version = Assembly.GetExecutingAssembly().GetName().Version;
 			if (version != null)
 			{
-				Title += String.Format(" v{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+				Title += String.Format(" v{0}.{1}.{2}.{3}", version.Major, version.Minor, version.Build, version.Revision);
 			}
 
 			IsPinned = false;

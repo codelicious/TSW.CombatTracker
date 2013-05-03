@@ -33,28 +33,20 @@ namespace TSW.CombatParser
 			Heals = new HealCollection();
 		}
 
+        private HealCollection owner;
+
 		public string Name { get; private set; }
 		public HealCollection Heals { get; private set; }
 
-		public uint TotalHealth { get; private set; }
-		public uint TotalHeals { get; private set; }
-		public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
-		public double PercentOfTotalHealing { get { return (double)TotalHealth / owner.TotalHealth * 100.0; } }
+        public uint TotalHealth { get { return Heals.TotalHealth; } }
+        public uint TotalHeals { get { return Heals.TotalHeals; } }
+        public double HealthPerHeal { get { return Heals.HealthPerHeal; } }
+        public double PercentOfTotalHealing { get { return (double)Heals.TotalHealth / owner.TotalHealth * 100.0; } }
 
-		private HealCollection owner;
-
-		public double HealthPerMinute
-		{
-			get { return 0.0; }
-		}
-
-		public void AddHeal(Heal heal)
-		{
-			Heals.Add(heal);
-
-			TotalHealth += heal.Amount;
-			++TotalHeals;
-		}
+        public void AddHeal(Heal heal)
+        {
+            Heals.Add(heal);
+        }
 
 		public void Refresh()
 		{

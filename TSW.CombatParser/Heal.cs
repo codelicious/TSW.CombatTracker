@@ -53,10 +53,14 @@ namespace TSW.CombatParser
 		public uint TotalCrits { get; private set; }
 		public uint TotalCritHealth { get; private set; }
 
-		public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
+        public double HealthPerHeal { get { return (double)TotalHealth / TotalHeals; } }
+        public double HealthPerSecond { get { return GetRecentHealing(60.0) / 60.0; } }
 		public double HealthPerMinute { get { return GetRecentHealing(300.0); } }
 		public double CritPercent { get { return (double)TotalCrits / TotalHeals * 100.0; } }
 		public double CritHealPercent { get { return (double)TotalCritHealth / TotalHealth * 100.0; } }
+
+        public uint MinHeal { get; private set; }
+        public uint MaxHeal { get; private set; }
 
 		private double GetRecentHealing(double seconds)
 		{
@@ -77,6 +81,11 @@ namespace TSW.CombatParser
 				++TotalCrits;
 				TotalCritHealth += heal.Amount;
 			}
+
+            if (MinHeal == 0 || heal.Amount < MinHeal)
+                MinHeal = heal.Amount;
+            if (heal.Amount > MaxHeal)
+                MaxHeal = heal.Amount;
 		}
 
 		public void Clear()

@@ -41,6 +41,9 @@ namespace TSW.CombatParser
 		public uint TotalPenetratedDamage { get; private set; }
 		public uint TotalEvaded { get; private set; }
 
+        public uint MinDamage { get; private set; }
+        public uint MaxDamage { get; private set; }
+
 		public double DamagePerHit { get { return (double)TotalDamage / TotalAttacks; } }
 		public double CritPercent { get { return (double)TotalCrits / TotalAttacks * 100.0; } }
 		public double CritDamagePercent { get { return (double)TotalCritDamage / TotalDamage * 100.0; } }
@@ -121,6 +124,12 @@ namespace TSW.CombatParser
 			// Update running totals
 			++TotalAttacks;
 			TotalDamage += item.Damage;
+
+            if (MinDamage == 0 || item.Damage < MinDamage)
+                MinDamage = item.Damage;
+
+            if (item.Damage > MaxDamage)
+                MaxDamage = item.Damage;
 
 			if (item.Critical)
 			{

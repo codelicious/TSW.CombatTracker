@@ -52,7 +52,16 @@
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDmgPerHitCell">
-			<TextBlock Text="{Binding Path=Hits.DamagePerHit, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+            <TextBlock Text="{Binding Path=Hits.DamagePerHit, StringFormat=N2}" HorizontalAlignment="Stretch" TextAlignment="Right">
+                <TextBlock.ToolTip>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Min: " />
+                        <TextBlock Text="{Binding Hits.MinDamage, StringFormat=N0}" />
+                        <TextBlock Text=" Max: " />
+                        <TextBlock Text="{Binding Hits.MaxDamage, StringFormat=N0}" />
+                    </StackPanel>
+                </TextBlock.ToolTip>
+            </TextBlock>
 		</DataTemplate>
 
 		<DataTemplate x:Key="AttackDPSCell">
@@ -77,9 +86,9 @@
 
 		<GridViewColumnCollection x:Key="AttackTypesColumns">
 			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
-			<GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
 			<GridViewColumn Header="Damage" CellTemplate="{StaticResource AttackDamageCell}" Width="65" />
-			<GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
+            <GridViewColumn Header="Hits" CellTemplate="{StaticResource AttackAttacksCell}" Width="50" />
+            <GridViewColumn Header="Dmg/Hit" CellTemplate="{StaticResource AttackDmgPerHitCell}" Width="45" />
 			<GridViewColumn Header="DPS" CellTemplate="{StaticResource AttackDPSCell}" Width="45" />
 			<!--<GridViewColumn Header="DPM" CellTemplate="{StaticResource AttackDPMCell}" Width="45" />-->
 			<GridViewColumn Header="% Crit" CellTemplate="{StaticResource AttackPercentCritCell}" Width="45" />
@@ -88,31 +97,40 @@
 		</GridViewColumnCollection>
 
 		<DataTemplate x:Key="HealHealthCell">
-			<TextBlock Text="{Binding TotalHealth, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+			<TextBlock Text="{Binding Heals.TotalHealth, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="HealHealsCell">
-			<TextBlock Text="{Binding TotalHeals, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+            <TextBlock Text="{Binding Heals.TotalHeals, StringFormat=N0}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="HealHealthPerHealCell">
-			<TextBlock Text="{Binding HealthPerHeal, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+            <TextBlock Text="{Binding Heals.HealthPerHeal, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right">
+                <TextBlock.ToolTip>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Min: " />
+                        <TextBlock Text="{Binding Heals.MinHeal, StringFormat=N0}" />
+                        <TextBlock Text=" Max: " />
+                        <TextBlock Text="{Binding Heals.MaxHeal, StringFormat=N0}" />
+                    </StackPanel>
+                </TextBlock.ToolTip>
+            </TextBlock>
 		</DataTemplate>
 
-		<DataTemplate x:Key="HealHPMCell">
-			<TextBlock Text="{Binding HealthPerMinute, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+		<DataTemplate x:Key="HealHPSCell">
+            <TextBlock Text="{Binding Heals.HealthPerSecond, StringFormat=N1}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<DataTemplate x:Key="HealPercentTotalCell">
-			<TextBlock Text="{Binding PercentOfTotalHealing, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
+            <TextBlock Text="{Binding Heals.PercentOfTotalHealing, StringFormat={}{0:N1}%}" HorizontalAlignment="Stretch" TextAlignment="Right" />
 		</DataTemplate>
 
 		<GridViewColumnCollection x:Key="HealTypesColumns">
-			<GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
+            <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="110" />
 			<GridViewColumn Header="Health" CellTemplate="{StaticResource HealHealthCell}" Width="50" />
 			<GridViewColumn Header="Heals" CellTemplate="{StaticResource HealHealsCell}" Width="65" />
 			<GridViewColumn Header="Health/Heal" CellTemplate="{StaticResource HealHealthPerHealCell}" Width="52" />
-			<GridViewColumn Header="Health/Min" CellTemplate="{StaticResource HealHPMCell}" Width="52" />
+			<GridViewColumn Header="Health/Sec" CellTemplate="{StaticResource HealHPSCell}" Width="52" />
 			<GridViewColumn Header="% Total" CellTemplate="{StaticResource HealPercentTotalCell}" Width="52" />
 		</GridViewColumnCollection>
 
@@ -196,7 +214,7 @@
 
 				<TextBlock Text="Total:" Grid.Row="0" Grid.Column="0" />
 				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPS, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.DPS, StringFormat=({0:N1}/sec)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 				<TextBlock Text="Hits: " Grid.Row="1" Grid.Column="0" />
 				<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=OffensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
@@ -277,7 +295,7 @@
 
 					<TextBlock Text="Damage:" Grid.Row="0" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalDamage, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DPS, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.DPS, StringFormat=({0:N1}/sec)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 					<TextBlock Text="Hits:" Grid.Row="1" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHits.TotalAttacks, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
@@ -344,7 +362,7 @@
 
 					<TextBlock Text="Health:" Grid.Row="0" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.TotalHealth, StringFormat=N0}" TextAlignment="Right" Grid.Row="0" Grid.Column="1" />
-					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.HealthPerMinute, StringFormat=({0:N1}/min)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
+					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.HealthPerSecond, StringFormat=({0:N1}/sec)}" Margin="8,0,0,0" Grid.Row="0" Grid.Column="2" />
 
 					<TextBlock Text="Heals: " Grid.Row="1" Grid.Column="0" />
 					<TextBlock Text="{Binding Source={StaticResource CharactersSource}, Path=DefensiveHeals.TotalHeals, StringFormat=N0}" TextAlignment="Right" Grid.Row="1" Grid.Column="1" />
