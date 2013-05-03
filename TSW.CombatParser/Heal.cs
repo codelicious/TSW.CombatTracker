@@ -125,6 +125,9 @@ namespace TSW.CombatParser
 			TotalHealth = 0;
 			TotalCrits = 0;
 			TotalCritHealth = 0;
+
+            MinHeal = 0;
+            MaxHeal = 0;
 		}
 
 		public bool Contains(Heal item)

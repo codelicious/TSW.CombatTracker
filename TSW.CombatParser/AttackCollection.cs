@@ -168,6 +168,9 @@ namespace TSW.CombatParser
 			TotalBlocked = 0;
 			TotalPenetrated = 0;
 			TotalGlanced = 0;
+
+            MinDamage = 0;
+            MaxDamage = 0;
 		}
 
 		public bool Contains(Attack item)
