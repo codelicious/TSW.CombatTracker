@@ -76,7 +76,7 @@ namespace TSW.CombatParser
 			Timestamp = e.Timestamp;
 			Attacker = e.Attacker;
 			Target = e.Target;
-			AttackType = e.BarrierType;
+			AttackType = !String.IsNullOrEmpty(e.AttackType) ? e.AttackType : e.BarrierType;
 			Damage = e.Damage;
 			DamageType = String.Empty;
 			Critical = false;

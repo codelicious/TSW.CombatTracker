@@ -44,8 +44,8 @@ namespace TSW.CombatParser
 		static Regex youEvadeOtherEx = new Regex(@"(You) evade ([^\']+)\'s (.+)\.", RegexOptions.Compiled);
 		static Regex otherEvadedOtherEx = new Regex(@"(.+) evaded (.+)\'s (.+)\.", RegexOptions.Compiled);
 
-		static Regex youAbsorbed = new Regex(@"Your (.+) absorbs (\d+) damage from (.+)'s (.)+\.", RegexOptions.Compiled);
-		static Regex otherAbsorbed = new Regex(@"(.+) absorbs (\d+) damage of your (.)+\.", RegexOptions.Compiled);
+		static Regex youAbsorbed = new Regex(@"Your (.+) absorbs (\d+) damage from (.+)'s (.+)\.", RegexOptions.Compiled);
+		static Regex otherAbsorbed = new Regex(@"(.+) absorbs (\d+) damage of your (.+)\.", RegexOptions.Compiled);
 
 		// TODO: Add reflect expressions
 
@@ -399,6 +399,7 @@ namespace TSW.CombatParser
 				absorb.Attacker = m.Groups[3].Value;
 				absorb.Target = "You";
 				absorb.BarrierType = m.Groups[1].Value;
+				absorb.AttackType = m.Groups[4].Value;
 
 				uint damage;
 				if (uint.TryParse(m.Groups[2].Value, out damage))
@@ -421,6 +422,7 @@ namespace TSW.CombatParser
 				absorb.Attacker = "You";
 				absorb.Target = m.Groups[1].Value;
 				absorb.BarrierType = m.Groups[3].Value;
+				absorb.AttackType = absorb.BarrierType; // Currently there's no indication of the attack which caused the absorbed damage
 
 				uint damage;
 				if (uint.TryParse(m.Groups[2].Value, out damage))
@@ -502,6 +504,7 @@ namespace TSW.CombatParser
 		public string Attacker { get; set; }
 		public string Target { get; set; }
 		public string BarrierType { get; set; }
+		public string AttackType { get; set; }
 		public uint Damage { get; set; }
 	}
 
